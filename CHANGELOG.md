@@ -32,6 +32,9 @@
   - `Function.isCallable`
   - `Function.isConstructor`
 - Added a workaround of most cases breakage modern `String#at` after loading obsolete `String#at` proposal module, [#1019](https://github.com/zloirock/core-js/issues/1019)
+- Extension of the API, [#1012](https://github.com/zloirock/core-js/issues/1012)
+  - Added a new `core-js/actual/**` namespace
+  - Added entry points for each finished post-ES6 proposal
 
 ##### 3.19.3 - 2021.12.06
 - Fixed internal slots check in methods of some built-in types, [#1017](https://github.com/zloirock/core-js/issues/1017)
