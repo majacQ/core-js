@@ -1,20 +1,22 @@
 'use strict';
 var getBuiltIn = require('../internals/get-built-in');
-var apply = require('../internals/function-apply');
 var hasOwn = require('../internals/has-own-property');
 var createNonEnumerableProperty = require('../internals/create-non-enumerable-property');
 var isPrototypeOf = require('../internals/object-is-prototype-of');
 var setPrototypeOf = require('../internals/object-set-prototype-of');
 var copyConstructorProperties = require('../internals/copy-constructor-properties');
 var inheritIfRequired = require('../internals/inherit-if-required');
+var normalizeStringArgument = require('../internals/normalize-string-argument');
 var installErrorCause = require('../internals/install-error-cause');
 var clearErrorStack = require('../internals/clear-error-stack');
 var ERROR_STACK_INSTALLABLE = require('../internals/error-stack-installable');
 var IS_PURE = require('../internals/is-pure');
 
-module.exports = function (ERROR_NAME, wrapper, FORCED, IS_AGGREGATE_ERROR) {
+module.exports = function (FULL_NAME, wrapper, FORCED, IS_AGGREGATE_ERROR) {
   var OPTIONS_POSITION = IS_AGGREGATE_ERROR ? 2 : 1;
-  var OriginalError = apply(getBuiltIn, null, ERROR_NAME.split('.'));
+  var path = FULL_NAME.split('.');
+  var ERROR_NAME = path[path.length - 1];
+  var OriginalError = getBuiltIn.apply(null, path);
 
   if (!OriginalError) return;
 
@@ -27,8 +29,10 @@ module.exports = function (ERROR_NAME, wrapper, FORCED, IS_AGGREGATE_ERROR) {
 
   var BaseError = getBuiltIn('Error');
 
-  var WrappedError = wrapper(function () {
-    var result = apply(OriginalError, this, arguments);
+  var WrappedError = wrapper(function (a, b) {
+    var message = normalizeStringArgument(IS_AGGREGATE_ERROR ? b : a, undefined);
+    var result = IS_AGGREGATE_ERROR ? new OriginalError(a) : new OriginalError();
+    if (message !== undefined) createNonEnumerableProperty(result, 'message', message);
     if (ERROR_STACK_INSTALLABLE) createNonEnumerableProperty(result, 'stack', clearErrorStack(result.stack, 2));
     if (this && isPrototypeOf(OriginalErrorPrototype, this)) inheritIfRequired(result, this, WrappedError);
     if (arguments.length > OPTIONS_POSITION) installErrorCause(result, arguments[OPTIONS_POSITION]);
@@ -39,12 +43,16 @@ module.exports = function (ERROR_NAME, wrapper, FORCED, IS_AGGREGATE_ERROR) {
 
   if (ERROR_NAME !== 'Error') {
     if (setPrototypeOf) setPrototypeOf(WrappedError, BaseError);
-    else copyConstructorProperties(WrappedError, BaseError);
+    else copyConstructorProperties(WrappedError, BaseError, { name: true });
   }
 
   copyConstructorProperties(WrappedError, OriginalError);
 
   if (!IS_PURE) try {
+    // Safari 13- bug: WebAssembly errors does not have a proper `.name`
+    if (OriginalErrorPrototype.name !== ERROR_NAME) {
+      createNonEnumerableProperty(OriginalErrorPrototype, 'name', ERROR_NAME);
+    }
     OriginalErrorPrototype.constructor = WrappedError;
   } catch (error) { /* empty */ }
 

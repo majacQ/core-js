@@ -199,9 +199,9 @@ QUnit.module('structuredClone', () => {
     const link = fromSource('WebAssembly.LinkError()');
     const runtime = fromSource('WebAssembly.RuntimeError()');
 
-    if (compile) errors.push(['CompileError', compile]);
-    if (link) errors.push(['LinkError', link]);
-    if (runtime) errors.push(['RuntimeError', runtime]);
+    if (compile && compile.name === 'CompileError') errors.push(['CompileError', compile]);
+    if (link && link.name === 'LinkError') errors.push(['LinkError', link]);
+    if (runtime && runtime.name === 'RuntimeError') errors.push(['RuntimeError', runtime]);
 
     for (const [name, error] of errors) cloneObjectTest(assert, error, (orig, clone) => {
       assert.same(orig.constructor, clone.constructor, `${ name }#constructor`);
@@ -323,18 +323,21 @@ QUnit.module('structuredClone', () => {
     });
   }
 
-  if (fromSource('new ImageData(8, 8)')) QUnit.test('ImageData', assert => {
-    const imageData = new ImageData(8, 8);
-    for (let i = 0; i < 256; ++i) {
-      imageData.data[i] = i;
-    }
-    cloneObjectTest(assert, imageData, (orig, clone) => {
-      assert.same(orig.width, clone.width);
-      assert.same(orig.height, clone.height);
-      assert.same(orig.colorSpace, clone.colorSpace);
-      assert.arrayEqual(orig.data, clone.data);
+  // Safari 8- does not support `{ colorSpace }` option
+  if (fromSource('new ImageData(new ImageData(8, 8).data, 8, 8, { colorSpace: new ImageData(8, 8).colorSpace })')) {
+    QUnit.test('ImageData', assert => {
+      const imageData = new ImageData(8, 8);
+      for (let i = 0; i < 256; ++i) {
+        imageData.data[i] = i;
+      }
+      cloneObjectTest(assert, imageData, (orig, clone) => {
+        assert.same(orig.width, clone.width);
+        assert.same(orig.height, clone.height);
+        assert.same(orig.colorSpace, clone.colorSpace);
+        assert.arrayEqual(orig.data, clone.data);
+      });
     });
-  });
+  }
 
   if (fromSource('new Blob(["test"])')) QUnit.test('Blob', assert => {
     cloneObjectTest(

@@ -637,9 +637,9 @@ export const data = {
     safari: '9.0',
   },
   'es.number.to-exponential': {
-    chrome: '26',
+    chrome: '51',
     edge: '18',
-    firefox: '50',
+    firefox: '87',
     safari: '11',
   },
   'es.number.to-fixed': {
@@ -1342,7 +1342,7 @@ export const data = {
     safari: '10.0',
   },
   'es.typed-array.iterator': {
-    chrome: '47',
+    chrome: '51',
     edge: '13',
     firefox: '37',
     safari: '10.0',

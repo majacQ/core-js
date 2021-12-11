@@ -23,13 +23,20 @@ QUnit.test('Function.isConstructor', assert => {
   const arrow = fromSource('it => it');
   if (arrow) assert.false(isConstructor(arrow), 'arrow');
   const klass = fromSource('class {}');
-  if (klass) assert.true(isConstructor(klass), 'class');
-  const gen = fromSource('function * () {}');
-  if (gen) assert.false(isConstructor(gen), 'gen');
+  // Safari 9 and Edge 13- bugs
+  if (klass && !/constructor|function/.test(klass)) assert.true(isConstructor(klass), 'class');
+  const Gen = fromSource('function * () {}');
+  // V8 ~ Chrome 49- bug
+  if (Gen) try {
+    new Gen();
+  } catch (error) {
+    assert.false(isConstructor(Gen), 'gen');
+  }
   const asyncFunc = fromSource('async function () {}');
   if (asyncFunc) assert.false(isConstructor(asyncFunc), 'asyncFunc');
   const asyncGen = fromSource('async * function () {}');
   if (asyncGen) assert.false(isConstructor(asyncGen), 'asyncGen');
   const method = fromSource('({f(){}}).f');
-  if (method) assert.false(isConstructor(method), 'method');
+  // Safari 9 bug
+  if (method && !/function/.test(method)) assert.false(isConstructor(method), 'method');
 });
