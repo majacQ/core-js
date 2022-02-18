@@ -1,6 +1,132 @@
 ## Changelog
 ##### Unreleased
+- Nothing
+
+##### 3.21.1 - 2022.02.17
+- Added a [bug](https://bugs.webkit.org/show_bug.cgi?id=236541)fix for the WebKit `Array.prototype.{ groupBy, groupByToMap }` implementation
+- `core-js-compat` targets parser transforms engine names to lower case
+- `atob` / `btoa` marked as [fixed](https://github.com/nodejs/node/pull/41478) in NodeJS 17.5
+- Added Electron 18.0 compat data mapping
+- Added Deno 1.20 compat data mapping
+
+##### 3.21.0 - 2022.02.02
+- Added [Base64 utility methods](https://developer.mozilla.org/en-US/docs/Glossary/Base64):
+  - `atob`
+  - `btoa`
+- Added the proper validation of arguments to some methods from web standards
+- Forced replacement of all features from early-stage proposals for avoiding possible web compatibility issues in the future
+- Added Rhino 1.7.14 compat data
+- Added Deno 1.19 compat data mapping
+- Added Opera Android 66 and 67 compat data mapping
+- Added iOS Safari 15.3 and 15.4 compat data mapping
+
+##### 3.20.3 - 2022.01.15
+- Detects and replaces broken third-party `Function#bind` polyfills, uses only native `Function#bind` in the internals
+- `structuredClone` should throw an error if no arguments passed
+- Changed the structure of notes in `__core-js_shared__`
+
+##### 3.20.2 - 2022.01.02
+- Added a fix of [a V8 ~ Chrome 36- `Object.{ defineProperty, defineProperties }` bug](https://bugs.chromium.org/p/v8/issues/detail?id=3334), [Babel issue](https://github.com/babel/babel/issues/14056)
+- Added fixes of some different `%TypedArray%.prototype.set` bugs, affects modern engines (like Chrome < 95 or Safari < 14.1)
+
+##### 3.20.1 - 2021.12.23
+- Fixed the order of calling reactions of already fulfilled / rejected promises in `Promise.prototype.then`, [#1026](https://github.com/zloirock/core-js/issues/1026)
+- Fixed possible memory leak in specific promise chains
+- Fixed some missed dependencies of entries
+- Added Deno 1.18 compat data mapping
+
+##### 3.20.0 - 2021.12.16
+- Added `structuredClone` method [from the HTML spec](https://html.spec.whatwg.org/multipage/structured-data.html#dom-structuredclone), [see MDN](https://developer.mozilla.org/en-US/docs/Web/API/structuredClone)
+  - Includes all cases of cloning and transferring of required ECMAScript and platform types that can be polyfilled, for the details see [the caveats](https://github.com/zloirock/core-js#caveats-when-using-structuredclone-polyfill)
+  - Uses native structured cloning algorithm implementations where it's possible
+  - Includes the new semantic of errors cloning from [`html/5749`](https://github.com/whatwg/html/pull/5749)
+- Added `DOMException` polyfill, [the Web IDL spec](https://webidl.spec.whatwg.org/#idl-DOMException), [see MDN](https://developer.mozilla.org/en-US/docs/Web/API/DOMException)
+  - Includes `DOMException` and its attributes polyfills with fixes of many different engines bugs
+  - Includes `DOMException#stack` property polyfill in engines that should have it
+  - Reuses native `DOMException` implementations where it's possible (for example, in old NodeJS where it's not exposed as global)
+- Added [support of `cause` on all Error types](https://github.com/tc39/proposal-error-cause)
+- Added `Error.prototype.toString` method polyfill with fixes of many different bugs of JS engines
+- Added `Number.prototype.toExponential` method polyfill with fixes of many different bugs of JS engines
+- [`Array` grouping proposal](https://github.com/tc39/proposal-array-grouping):
+  - Moved to stage 3
+  - Added `Array.prototype.groupByToMap` method
+  - Removed `@@species` support
+- Added [change `Array` by copy stage 2 proposal](https://github.com/tc39/proposal-change-array-by-copy):
+  - `Array.prototype.toReversed`
+  - `Array.prototype.toSorted`
+  - `Array.prototype.toSpliced`
+  - `Array.prototype.with`
+  - `%TypedArray%.prototype.toReversed`
+  - `%TypedArray%.prototype.toSorted`
+  - `%TypedArray%.prototype.toSpliced`
+  - `%TypedArray%.prototype.with`
+- Added `Iterator.prototype.toAsync` method from [the iterator helpers stage 2 proposal](https://github.com/tc39/proposal-iterator-helpers)
+- [`Array.fromAsync` proposal](https://github.com/tc39/proposal-array-from-async) moved to stage 2
+- Added [`String.cooked` stage 1 proposal](https://github.com/tc39/proposal-string-cooked):
+- Added [`Function.prototype.unThis` stage 0 proposal](https://github.com/js-choi/proposal-function-un-this)
+- Added [`Function.{ isCallable, isConstructor }` stage 0 proposal](https://github.com/caitp/TC39-Proposals/blob/trunk/tc39-reflect-isconstructor-iscallable.md):
+  - `Function.isCallable`
+  - `Function.isConstructor`
+- Added a workaround of most cases breakage modern `String#at` after loading obsolete `String#at` proposal module, [#1019](https://github.com/zloirock/core-js/issues/1019)
+- Fixed `Array.prototype.{ values, @@iterator }.name` in V8 ~ Chrome 45-
+- Fixed validation of typed arrays in typed arrays iteration methods in V8 ~ Chrome 50-
+- Extension of the API, [#1012](https://github.com/zloirock/core-js/issues/1012)
+  - Added a new `core-js/actual/**` namespace
+  - Added entry points for each finished post-ES6 proposal
+
+##### 3.19.3 - 2021.12.06
+- Fixed internal slots check in methods of some built-in types, [#1017](https://github.com/zloirock/core-js/issues/1017)
+- Fixed `URLSearchParams` iterator `.next` that should be enumerable [by the spec](https://webidl.spec.whatwg.org/#es-iterator-prototype-object)
+- Refactored `Subscription`
+- Added NodeJS 17.2 compat data mapping
+
+##### 3.19.2 - 2021.11.29
+- Added a workaround for a UC Browser specific version bug with unobservable `RegExp#sticky` flag, [#1008](https://github.com/zloirock/core-js/issues/1008), [#1015](https://github.com/zloirock/core-js/issues/1015)
+- Added handling of comments and specific spaces to `Function#name` polyfill, [#1010](https://github.com/zloirock/core-js/issues/1010), thanks [@ildar-shaimordanov](https://github.com/ildar-shaimordanov)
+- Prevented some theoretical cases of breaking / observing the internal state by patching `Array.prototype[@@species]`
+- Refactored `URL` and `URLSearchParams`
+- Added iOS Safari 15.2 compat data mapping
+- Added Electron 17.0 compat data mapping
+- Updated Deno compat data mapping
+
+##### 3.19.1 - 2021.11.03
+- Added a workaround for FF26- bug where `ArrayBuffer`s are non-extensible, but `Object.isExtensible` does not report it:
+  - Fixed in `Object.{ isExtensible, isSealed, isFrozen }` and `Reflect.isExtensible`
+  - Fixed handling of `ArrayBuffer`s as collections keys
+- Fixed `Object#toString` on `AggregateError` in IE10-
+- Fixed possible lack of dependencies of `WeakMap` in IE8-
+- `.findLast` methods family marked as supported [from Chrome 97](https://chromestatus.com/features#milestone%3D97)
+- Fixed inheritance of Electron compat data `web.` modules
+- Fixed Safari 15.1 compat data (some features were not added)
+- Added iOS Safari 15.1 compat data mapping
+
+##### 3.19.0 - 2021.10.25
+- Most built-ins are encapsulated in `core-js` for preventing possible cases of breaking / observing the internal state by patching / deleting of them
+  - Avoid `.call` / `.apply` prototype methods that could be patched
+  - Avoid `instanceof` operator - implicit `.prototype` / `@@hasInstance` access that could be patched
+  - Avoid `RegExp#test`, `String#match` and some over methods - implicit `.exec` and `RegExp` well-known symbols access that could be patched
+- Clearing of `Error` stack from extra entries experimentally added to `AggregateError`, [#996](https://github.com/zloirock/core-js/pull/996), in case lack of problems it will be extended to other cases
+- In engines with native `Symbol` support, new well-known symbols created with usage `Symbol.for` for ensuring the same keys in different realms, [#998](https://github.com/zloirock/core-js/issues/998)
+- Added a workaround of [a BrowserFS NodeJS `process` polyfill bug](https://github.com/jvilk/bfs-process/issues/5) that incorrectly reports V8 version that's used in some cases of `core-js` feature detection
+- Fixed normalization of `message` `AggregateError` argument
+- Fixed order of arguments conversion in `Math.scale`, [a spec draft bug](https://github.com/rwaldron/proposal-math-extensions/issues/24)
+- Fixed `core-js-builder` work in NodeJS 17, added a workaround of [`webpack` + NodeJS 17 issue](https://github.com/webpack/webpack/issues/14532)
+- Added NodeJS 17.0 compat data mapping
+- Added Opera Android 65 compat data mapping
+- Updated Electron 16.0 compat data mapping
+- Many other minor fixes and improvements
+
+##### 3.18.3 - 2021.10.13
+- Fixed the prototype chain of `AggregateError` constructor that should contain `Error` constructor
+- Fixed incorrect `AggregateError.prototype` properties descriptors
+- Fixed `InstallErrorCause` internal operation
+- Added NodeJS 16.11 compat data mapping
+- Added Deno 1.16 compat data mapping
+- `Object.hasOwn` marked as supported from Safari 15.1
+
+##### 3.18.2 - 2021.10.06
 - Early `{ Array, %TypedArray% }.fromAsync` errors moved to the promise, per the latest changes of the spec draft
+- Internal `ToInteger(OrInfinity)` operation returns `+0` for `-0` argument, ES2020+ update
 - Fixed theoretical problems with handling bigint in `Number` constructor wrapper
 - Fixed `String.raw` with extra arguments
 - Fixed some missed dependencies in entry points
@@ -222,7 +348,7 @@
 - Added the missed `(es|stable)/instance/replace-all` entries
 - Updated compat data mapping for Opera - from Opera 69, the difference with Chrome versions increased to 14
 - Compat data mapping for modern Android WebView to Chrome moved from targets parser directly to compat data
-- Depracate `core-js-builder` `blacklist` option in favor of `exclude`
+- Deprecate `core-js-builder` `blacklist` option in favor of `exclude`
 
 ##### 2.6.12 [LEGACY] - 2020.11.26
 - Added code points / code units explicit feature detection in `String#at` for preventing breakage code which use obsolete `String#at` proposal polyfill
@@ -257,7 +383,7 @@
 - Updated all required dependencies
 
 ##### 3.6.5 - 2020.04.09
-- Updated Browserlist [#755](https://github.com/zloirock/core-js/issues/755)
+- Updated Browserslist [#755](https://github.com/zloirock/core-js/issues/755)
 - Fixed `setImmediate` in Safari [#770](https://github.com/zloirock/core-js/issues/770), thanks [@dtinth](https://github.com/dtinth)
 - Fixed some regexp, thanks [@scottarc](https://github.com/scottarc)
 - Added OPEN_SOURCE_CONTRIBUTOR detection in `postinstall`, thanks [@scottarc](https://github.com/scottarc)
@@ -458,8 +584,8 @@
 - Refactoring. Many minor internal improvements and fixes like:
   - Improved `Symbol.keyFor` complexity to `O(1)`
   - Fixed the order of arguments validation in `String.prototype.{ endsWith, includes, startsWith }`
-  - Internal implementation of `RegExp#flags` helper now respect `dotAll` flag (mainly ralated to the `pure` version)
-  - Performace optimizations related old V8
+  - Internal implementation of `RegExp#flags` helper now respect `dotAll` flag (mainly related to the `pure` version)
+  - Performance optimizations related old V8
   - Etc.
 
 ##### 3.1.3 - 2019.05.27
@@ -635,7 +761,7 @@
     - `delay`
   - Add `.sham` flag to features which can't be properly polyfilled and / or not recommended for usage:
     - `Symbol` constructor - we can't add new primitives. `Object.prototype` accessors too expensive.
-    - `Object.{create, defineProperty, defineProperties, getOwnPropertyDescriptor, getOwnPropertyDescriptos}`, `Reflect.{defineProperty, getOwnPropertyDescriptor}` can't be properly polyfilled without descriptors support.
+    - `Object.{create, defineProperty, defineProperties, getOwnPropertyDescriptor, getOwnPropertyDescriptors}`, `Reflect.{defineProperty, getOwnPropertyDescriptor}` can't be properly polyfilled without descriptors support.
     - `Object.{freeze, seal, preventExtensions}`, `Reflect.preventExtensions` can't be properly polyfilled in ES3 environment.
     - `Object.getPrototypeOf` can be deceived in ES3 environment.
     - `Reflect.construct` can't be polyfilled for a correct work with `newTarget` argument on built-ins.

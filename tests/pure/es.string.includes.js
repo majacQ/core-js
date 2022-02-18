@@ -1,14 +1,14 @@
 import { STRICT } from '../helpers/constants';
 
-import Symbol from 'core-js-pure/features/symbol';
-import includes from 'core-js-pure/features/string/includes';
+import Symbol from 'core-js-pure/es/symbol';
+import includes from 'core-js-pure/es/string/includes';
 
 QUnit.test('String#includes', assert => {
   assert.isFunction(includes);
-  assert.ok(!includes('abc'));
-  assert.ok(includes('aundefinedb'));
-  assert.ok(includes('abcd', 'b', 1));
-  assert.ok(!includes('abcd', 'b', 2));
+  assert.false(includes('abc'));
+  assert.true(includes('aundefinedb'));
+  assert.true(includes('abcd', 'b', 1));
+  assert.false(includes('abcd', 'b', 2));
 
   if (!Symbol.sham) {
     assert.throws(() => includes(Symbol(), 'b'), 'throws on symbol context');

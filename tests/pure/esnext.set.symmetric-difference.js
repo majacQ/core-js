@@ -1,7 +1,7 @@
 import { createIterable } from '../helpers/helpers';
 
+import from from 'core-js-pure/es/array/from';
 import Set from 'core-js-pure/features/set';
-import from from 'core-js-pure/features/array/from';
 
 QUnit.test('Set#symmetricDifference', assert => {
   const { symmetricDifference } = Set.prototype;
@@ -12,7 +12,7 @@ QUnit.test('Set#symmetricDifference', assert => {
   assert.nonEnumerable(Set.prototype, 'symmetricDifference');
 
   const set = new Set([1]);
-  assert.ok(set.symmetricDifference([2]) !== set);
+  assert.notSame(set.symmetricDifference([2]), set);
 
   assert.deepEqual(from(new Set([1, 2, 3]).symmetricDifference([4, 5])), [1, 2, 3, 4, 5]);
   assert.deepEqual(from(new Set([1, 2, 3]).symmetricDifference([3, 4])), [1, 2, 4]);

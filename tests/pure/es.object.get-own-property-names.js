@@ -1,8 +1,8 @@
 import { GLOBAL } from '../helpers/constants';
 import { includes } from '../helpers/helpers';
 
-import freeze from 'core-js-pure/features/object/freeze';
-import getOwnPropertyNames from 'core-js-pure/features/object/get-own-property-names';
+import freeze from 'core-js-pure/es/object/freeze';
+import getOwnPropertyNames from 'core-js-pure/es/object/get-own-property-names';
 
 QUnit.test('Object.getOwnPropertyNames', assert => {
   assert.isFunction(getOwnPropertyNames);
@@ -15,16 +15,16 @@ QUnit.test('Object.getOwnPropertyNames', assert => {
   }
   F1.prototype.q = F2.prototype.q = 1;
   const names = getOwnPropertyNames([1, 2, 3]);
-  assert.strictEqual(names.length, 4);
-  assert.ok(includes(names, '0'));
-  assert.ok(includes(names, '1'));
-  assert.ok(includes(names, '2'));
-  assert.ok(includes(names, 'length'));
+  assert.same(names.length, 4);
+  assert.true(includes(names, '0'));
+  assert.true(includes(names, '1'));
+  assert.true(includes(names, '2'));
+  assert.true(includes(names, 'length'));
   assert.deepEqual(getOwnPropertyNames(new F1()), ['w']);
   assert.deepEqual(getOwnPropertyNames(new F2()), ['toString']);
-  assert.ok(includes(getOwnPropertyNames(Array.prototype), 'toString'));
-  assert.ok(includes(getOwnPropertyNames(Object.prototype), 'toString'));
-  assert.ok(includes(getOwnPropertyNames(Object.prototype), 'constructor'));
+  assert.true(includes(getOwnPropertyNames(Array.prototype), 'toString'));
+  assert.true(includes(getOwnPropertyNames(Object.prototype), 'toString'));
+  assert.true(includes(getOwnPropertyNames(Object.prototype), 'constructor'));
   assert.deepEqual(getOwnPropertyNames(freeze({})), [], 'frozen');
   const primitives = [42, 'foo', false];
   for (const value of primitives) {

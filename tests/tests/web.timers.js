@@ -6,17 +6,17 @@ QUnit.test('setTimeout / clearTimeout', assert => {
   timeLimitedPromise(1e3, resolve => {
     setTimeout((a, b) => { resolve(a + b); }, 10, 'a', 'b');
   }).then(it => {
-    assert.strictEqual(it, 'ab', 'setTimeout works with additional args');
+    assert.same(it, 'ab', 'setTimeout works with additional args');
   }).catch(() => {
-    assert.ok(false, 'setTimeout works with additional args');
+    assert.avoid('setTimeout works with additional args');
   }).then(assert.async());
 
   timeLimitedPromise(50, resolve => {
     clearTimeout(setTimeout(resolve, 10));
   }).then(() => {
-    assert.ok(false, 'clearImmediate works with wraped setTimeout');
+    assert.avoid('clearImmediate works with wrapped setTimeout');
   }).catch(() => {
-    assert.ok(true, 'clearImmediate works with wraped setTimeout');
+    assert.required('clearImmediate works with wrapped setTimeout');
   }).then(assert.async());
 });
 
@@ -33,9 +33,9 @@ QUnit.test('setInterval / clearInterval', assert => {
       }
     }, 5, 'a', 'b');
   }).then(() => {
-    assert.ok(true, 'setInterval & clearInterval works with additional args');
+    assert.required('setInterval & clearInterval works with additional args');
   }).catch(error => {
     if (!error) error = {};
-    assert.ok(false, `setInterval & clearInterval works with additional args: ${ error.a }, ${ error.b }, times: ${ error.i }`);
+    assert.avoid(`setInterval & clearInterval works with additional args: ${ error.a }, ${ error.b }, times: ${ error.i }`);
   }).then(assert.async());
 });

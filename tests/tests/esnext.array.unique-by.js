@@ -9,7 +9,7 @@ QUnit.test('Array#uniqueBy', assert => {
   assert.nonEnumerable(Array.prototype, 'uniqueBy');
 
   let array = [1, 2, 3, 2, 1];
-  assert.ok(array.uniqueBy() !== array);
+  assert.notSame(array.uniqueBy(), array);
   assert.deepEqual(array.uniqueBy(), [1, 2, 3]);
 
   array = [
@@ -51,5 +51,5 @@ QUnit.test('Array#uniqueBy', assert => {
     assert.throws(() => uniqueBy.call(null), TypeError);
     assert.throws(() => uniqueBy.call(undefined), TypeError);
   }
-  assert.ok('uniqueBy' in Array.prototype[Symbol.unscopables], 'In Array#@@unscopables');
+  assert.true('uniqueBy' in Array.prototype[Symbol.unscopables], 'In Array#@@unscopables');
 });

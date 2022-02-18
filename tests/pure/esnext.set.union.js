@@ -1,7 +1,7 @@
 import { createIterable } from '../helpers/helpers';
 
+import from from 'core-js-pure/es/array/from';
 import Set from 'core-js-pure/features/set';
-import from from 'core-js-pure/features/array/from';
 
 QUnit.test('Set#union', assert => {
   const { union } = Set.prototype;
@@ -12,7 +12,7 @@ QUnit.test('Set#union', assert => {
   assert.nonEnumerable(Set.prototype, 'union');
 
   const set = new Set([1]);
-  assert.ok(set.union([2]) !== set);
+  assert.notSame(set.union([2]), set);
 
   assert.deepEqual(from(new Set([1, 2, 3]).union([4, 5])), [1, 2, 3, 4, 5]);
   assert.deepEqual(from(new Set([1, 2, 3]).union([3, 4])), [1, 2, 3, 4]);

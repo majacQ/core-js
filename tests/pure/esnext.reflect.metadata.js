@@ -1,4 +1,5 @@
-import { metadata, hasOwnMetadata } from 'core-js-pure/features/reflect';
+import hasOwnMetadata from 'core-js-pure/features/reflect/has-own-metadata';
+import metadata from 'core-js-pure/features/reflect/metadata';
 
 QUnit.test('Reflect.metadata', assert => {
   assert.isFunction(metadata);
@@ -8,8 +9,8 @@ QUnit.test('Reflect.metadata', assert => {
   assert.throws(() => decorator(undefined, 'name'), TypeError);
   let target = function () { /* empty */ };
   decorator(target);
-  assert.same(hasOwnMetadata('key', target, undefined), true);
+  assert.true(hasOwnMetadata('key', target, undefined));
   target = {};
   decorator(target, 'name');
-  assert.same(hasOwnMetadata('key', target, 'name'), true);
+  assert.true(hasOwnMetadata('key', target, 'name'));
 });

@@ -1,4 +1,4 @@
-import isSealed from 'core-js-pure/features/object/is-sealed';
+import isSealed from 'core-js-pure/es/object/is-sealed';
 
 QUnit.test('Object.isSealed', assert => {
   assert.isFunction(isSealed);
@@ -6,7 +6,7 @@ QUnit.test('Object.isSealed', assert => {
   const primitives = [42, 'string', false, null, undefined];
   for (const value of primitives) {
     assert.notThrows(() => isSealed(value) || true, `accept ${ value }`);
-    assert.same(isSealed(value), true, `returns true on ${ value }`);
+    assert.true(isSealed(value), `returns true on ${ value }`);
   }
-  assert.same(isSealed({}), false);
+  assert.false(isSealed({}));
 });

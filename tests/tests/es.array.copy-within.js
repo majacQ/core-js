@@ -7,7 +7,7 @@ QUnit.test('Array#copyWithin', assert => {
   assert.name(copyWithin, 'copyWithin');
   assert.looksNative(copyWithin);
   const array = [1];
-  assert.strictEqual(array.copyWithin(0), array);
+  assert.same(array.copyWithin(0), array);
   assert.nonEnumerable(Array.prototype, 'copyWithin');
   assert.deepEqual([1, 2, 3, 4, 5].copyWithin(0, 3), [4, 5, 3, 4, 5]);
   assert.deepEqual([1, 2, 3, 4, 5].copyWithin(1, 3), [1, 4, 5, 4, 5]);
@@ -25,5 +25,5 @@ QUnit.test('Array#copyWithin', assert => {
     assert.throws(() => copyWithin.call(null, 0), TypeError);
     assert.throws(() => copyWithin.call(undefined, 0), TypeError);
   }
-  assert.ok('copyWithin' in Array.prototype[Symbol.unscopables], 'In Array#@@unscopables');
+  assert.true('copyWithin' in Array.prototype[Symbol.unscopables], 'In Array#@@unscopables');
 });

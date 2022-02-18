@@ -1,5 +1,5 @@
+import from from 'core-js-pure/es/array/from';
 import Map from 'core-js-pure/features/map';
-import from from 'core-js-pure/features/array/from';
 
 QUnit.test('Map#filter', assert => {
   const { filter } = Map.prototype;
@@ -28,7 +28,7 @@ QUnit.test('Map#filter', assert => {
     [3, 4],
     ['d', true],
     [4, 5],
-  ]).filter(it => typeof it === 'number')), [
+  ]).filter(it => typeof it == 'number')), [
     ['a', 1],
     [1, 2],
     ['b', 3],
@@ -36,7 +36,7 @@ QUnit.test('Map#filter', assert => {
     [4, 5],
   ]);
 
-  assert.ok(new Map().filter(it => it) instanceof Map);
+  assert.true(new Map().filter(it => it) instanceof Map);
 
   assert.throws(() => filter.call({}, () => { /* empty */ }), TypeError);
   assert.throws(() => filter.call(undefined, () => { /* empty */ }), TypeError);

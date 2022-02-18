@@ -1,4 +1,4 @@
-import Symbol from 'core-js-pure/features/symbol';
+import Symbol from 'core-js-pure/es/symbol';
 import codePoints from 'core-js-pure/features/string/code-points';
 
 QUnit.test('String#codePoints', assert => {
@@ -6,8 +6,8 @@ QUnit.test('String#codePoints', assert => {
   let iterator = codePoints('qwe');
   assert.isIterator(iterator);
   assert.isIterable(iterator);
-  assert.strictEqual(iterator[Symbol.toStringTag], 'String Iterator');
-  assert.strictEqual(String(iterator), '[object String Iterator]');
+  assert.same(iterator[Symbol.toStringTag], 'String Iterator');
+  assert.same(String(iterator), '[object String Iterator]');
   assert.deepEqual(iterator.next(), {
     value: { codePoint: 113, position: 0 },
     done: false,

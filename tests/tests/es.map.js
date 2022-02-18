@@ -12,15 +12,15 @@ QUnit.test('Map', assert => {
   assert.arity(Map, 0);
   assert.name(Map, 'Map');
   assert.looksNative(Map);
-  assert.ok('clear' in Map.prototype, 'clear in Map.prototype');
-  assert.ok('delete' in Map.prototype, 'delete in Map.prototype');
-  assert.ok('forEach' in Map.prototype, 'forEach in Map.prototype');
-  assert.ok('get' in Map.prototype, 'get in Map.prototype');
-  assert.ok('has' in Map.prototype, 'has in Map.prototype');
-  assert.ok('set' in Map.prototype, 'set in Map.prototype');
-  assert.ok(new Map() instanceof Map, 'new Map instanceof Map');
-  assert.strictEqual(new Map(createIterable([[1, 1], [2, 2], [3, 3]])).size, 3, 'Init from iterable');
-  assert.strictEqual(new Map([[freeze({}), 1], [2, 3]]).size, 2, 'Support frozen objects');
+  assert.true('clear' in Map.prototype, 'clear in Map.prototype');
+  assert.true('delete' in Map.prototype, 'delete in Map.prototype');
+  assert.true('forEach' in Map.prototype, 'forEach in Map.prototype');
+  assert.true('get' in Map.prototype, 'get in Map.prototype');
+  assert.true('has' in Map.prototype, 'has in Map.prototype');
+  assert.true('set' in Map.prototype, 'set in Map.prototype');
+  assert.true(new Map() instanceof Map, 'new Map instanceof Map');
+  assert.same(new Map(createIterable([[1, 1], [2, 2], [3, 3]])).size, 3, 'Init from iterable');
+  assert.same(new Map([[freeze({}), 1], [2, 3]]).size, 2, 'Support frozen objects');
   let done = false;
   try {
     new Map(createIterable([null, 1, 2], {
@@ -29,7 +29,7 @@ QUnit.test('Map', assert => {
       },
     }));
   } catch { /* empty */ }
-  assert.ok(done, '.return #throw');
+  assert.true(done, '.return #throw');
   const array = [];
   done = false;
   array['@@iterator'] = undefined;
@@ -38,7 +38,7 @@ QUnit.test('Map', assert => {
     return [][Symbol.iterator].call(this);
   };
   new Map(array);
-  assert.ok(done);
+  assert.true(done);
   const object = {};
   new Map().set(object, 1);
   if (DESCRIPTORS) {
@@ -52,10 +52,14 @@ QUnit.test('Map', assert => {
   if (ownKeys) assert.arrayEqual(ownKeys(object), []);
   if (nativeSubclass) {
     const Subclass = nativeSubclass(Map);
-    assert.ok(new Subclass() instanceof Subclass, 'correct subclassing with native classes #1');
-    assert.ok(new Subclass() instanceof Map, 'correct subclassing with native classes #2');
-    assert.strictEqual(new Subclass().set(1, 2).get(1), 2, 'correct subclassing with native classes #3');
+    assert.true(new Subclass() instanceof Subclass, 'correct subclassing with native classes #1');
+    assert.true(new Subclass() instanceof Map, 'correct subclassing with native classes #2');
+    assert.same(new Subclass().set(1, 2).get(1), 2, 'correct subclassing with native classes #3');
   }
+
+  const buffer = new ArrayBuffer(8);
+  const map = new Map([[buffer, 8]]);
+  assert.true(map.has(buffer), 'works with ArrayBuffer keys');
 });
 
 QUnit.test('Map#clear', assert => {
@@ -66,23 +70,23 @@ QUnit.test('Map#clear', assert => {
   assert.nonEnumerable(Map.prototype, 'clear');
   let map = new Map();
   map.clear();
-  assert.strictEqual(map.size, 0);
+  assert.same(map.size, 0);
   map = new Map();
   map.set(1, 2);
   map.set(2, 3);
   map.set(1, 4);
   map.clear();
-  assert.strictEqual(map.size, 0);
-  assert.ok(!map.has(1));
-  assert.ok(!map.has(2));
+  assert.same(map.size, 0);
+  assert.false(map.has(1));
+  assert.false(map.has(2));
   const frozen = freeze({});
   map = new Map();
   map.set(1, 2);
   map.set(frozen, 3);
   map.clear();
-  assert.strictEqual(map.size, 0, 'Support frozen objects');
-  assert.ok(!map.has(1));
-  assert.ok(!map.has(frozen));
+  assert.same(map.size, 0, 'Support frozen objects');
+  assert.false(map.has(1));
+  assert.false(map.has(frozen));
 });
 
 QUnit.test('Map#delete', assert => {
@@ -99,20 +103,20 @@ QUnit.test('Map#delete', assert => {
   map.set(2, 5);
   map.set(1, 4);
   map.set(object, 9);
-  assert.strictEqual(map.size, 5);
-  assert.ok(map.delete(NaN));
-  assert.strictEqual(map.size, 4);
-  assert.ok(!map.delete(4));
-  assert.strictEqual(map.size, 4);
+  assert.same(map.size, 5);
+  assert.true(map.delete(NaN));
+  assert.same(map.size, 4);
+  assert.false(map.delete(4));
+  assert.same(map.size, 4);
   map.delete([]);
-  assert.strictEqual(map.size, 4);
+  assert.same(map.size, 4);
   map.delete(object);
-  assert.strictEqual(map.size, 3);
+  assert.same(map.size, 3);
   const frozen = freeze({});
   map.set(frozen, 42);
-  assert.strictEqual(map.size, 4);
+  assert.same(map.size, 4);
   map.delete(frozen);
-  assert.strictEqual(map.size, 3);
+  assert.same(map.size, 3);
 });
 
 QUnit.test('Map#forEach', assert => {
@@ -135,7 +139,7 @@ QUnit.test('Map#forEach', assert => {
     count++;
     result[value] = key;
   });
-  assert.strictEqual(count, 5);
+  assert.same(count, 5);
   assert.deepEqual(result, {
     1: NaN,
     7: 3,
@@ -158,7 +162,7 @@ QUnit.test('Map#forEach', assert => {
       map.set('4', 9);
     }
   });
-  assert.strictEqual(result, '0124');
+  assert.same(result, '0124');
   map = new Map([['0', 1]]);
   result = '';
   map.forEach(it => {
@@ -166,7 +170,7 @@ QUnit.test('Map#forEach', assert => {
     if (result !== '') throw new Error();
     result += it;
   });
-  assert.strictEqual(result, '1');
+  assert.same(result, '1');
   assert.throws(() => {
     Map.prototype.forEach.call(new Set(), () => { /* empty */ });
   }, 'non-generic');
@@ -188,12 +192,12 @@ QUnit.test('Map#get', assert => {
   map.set(1, 4);
   map.set(frozen, 42);
   map.set(object, object);
-  assert.strictEqual(map.get(NaN), 1);
-  assert.strictEqual(map.get(4), undefined);
-  assert.strictEqual(map.get({}), undefined);
-  assert.strictEqual(map.get(object), object);
-  assert.strictEqual(map.get(frozen), 42);
-  assert.strictEqual(map.get(2), 5);
+  assert.same(map.get(NaN), 1);
+  assert.same(map.get(4), undefined);
+  assert.same(map.get({}), undefined);
+  assert.same(map.get(object), object);
+  assert.same(map.get(frozen), 42);
+  assert.same(map.get(2), 5);
 });
 
 QUnit.test('Map#has', assert => {
@@ -212,12 +216,12 @@ QUnit.test('Map#has', assert => {
   map.set(1, 4);
   map.set(frozen, 42);
   map.set(object, object);
-  assert.ok(map.has(NaN));
-  assert.ok(map.has(object));
-  assert.ok(map.has(2));
-  assert.ok(map.has(frozen));
-  assert.ok(!map.has(4));
-  assert.ok(!map.has({}));
+  assert.true(map.has(NaN));
+  assert.true(map.has(object));
+  assert.true(map.has(2));
+  assert.true(map.has(frozen));
+  assert.false(map.has(4));
+  assert.false(map.has({}));
 });
 
 QUnit.test('Map#set', assert => {
@@ -234,30 +238,30 @@ QUnit.test('Map#set', assert => {
   map.set(2, 5);
   map.set(1, 4);
   map.set(object, object);
-  assert.ok(map.size === 5);
+  assert.same(map.size, 5);
   const chain = map.set(7, 2);
-  assert.strictEqual(chain, map);
+  assert.same(chain, map);
   map.set(7, 2);
-  assert.strictEqual(map.size, 6);
-  assert.strictEqual(map.get(7), 2);
-  assert.strictEqual(map.get(NaN), 1);
+  assert.same(map.size, 6);
+  assert.same(map.get(7), 2);
+  assert.same(map.get(NaN), 1);
   map.set(NaN, 42);
-  assert.strictEqual(map.size, 6);
-  assert.strictEqual(map.get(NaN), 42);
+  assert.same(map.size, 6);
+  assert.same(map.get(NaN), 42);
   map.set({}, 11);
-  assert.strictEqual(map.size, 7);
-  assert.strictEqual(map.get(object), object);
+  assert.same(map.size, 7);
+  assert.same(map.get(object), object);
   map.set(object, 27);
-  assert.strictEqual(map.size, 7);
-  assert.strictEqual(map.get(object), 27);
+  assert.same(map.size, 7);
+  assert.same(map.get(object), 27);
   map = new Map();
   map.set(NaN, 2);
   map.set(NaN, 3);
   map.set(NaN, 4);
-  assert.strictEqual(map.size, 1);
+  assert.same(map.size, 1);
   const frozen = freeze({});
   map = new Map().set(frozen, 42);
-  assert.strictEqual(map.get(frozen), 42);
+  assert.same(map.get(frozen), 42);
 });
 
 QUnit.test('Map#size', assert => {
@@ -265,12 +269,14 @@ QUnit.test('Map#size', assert => {
   const map = new Map();
   map.set(2, 1);
   const { size } = map;
-  assert.strictEqual(typeof size, 'number', 'size is number');
-  assert.strictEqual(size, 1, 'size is correct');
+  assert.same(typeof size, 'number', 'size is number');
+  assert.same(size, 1, 'size is correct');
   if (DESCRIPTORS) {
     const sizeDescriptor = getOwnPropertyDescriptor(Map.prototype, 'size');
-    assert.ok(sizeDescriptor && sizeDescriptor.get, 'size is getter');
-    assert.ok(sizeDescriptor && !sizeDescriptor.set, 'size isnt setter');
+    const getter = sizeDescriptor && sizeDescriptor.get;
+    const setter = sizeDescriptor && sizeDescriptor.set;
+    assert.same(typeof getter, 'function', 'size is getter');
+    assert.same(typeof setter, 'undefined', 'size isnt setter');
     assert.throws(() => Map.prototype.size, TypeError);
   }
 });
@@ -278,19 +284,19 @@ QUnit.test('Map#size', assert => {
 QUnit.test('Map & -0', assert => {
   let map = new Map();
   map.set(-0, 1);
-  assert.strictEqual(map.size, 1);
-  assert.ok(map.has(0));
-  assert.ok(map.has(-0));
-  assert.strictEqual(map.get(0), 1);
-  assert.strictEqual(map.get(-0), 1);
+  assert.same(map.size, 1);
+  assert.true(map.has(0));
+  assert.true(map.has(-0));
+  assert.same(map.get(0), 1);
+  assert.same(map.get(-0), 1);
   map.forEach((val, key) => {
-    assert.ok(!is(key, -0));
+    assert.false(is(key, -0));
   });
   map.delete(-0);
-  assert.strictEqual(map.size, 0);
+  assert.same(map.size, 0);
   map = new Map([[-0, 1]]);
   map.forEach((val, key) => {
-    assert.ok(!is(key, -0));
+    assert.false(is(key, -0));
   });
   map = new Map();
   map.set(4, 4);
@@ -298,12 +304,12 @@ QUnit.test('Map & -0', assert => {
   map.set(2, 2);
   map.set(1, 1);
   map.set(0, 0);
-  assert.ok(map.has(-0));
+  assert.true(map.has(-0));
 });
 
 QUnit.test('Map#@@toStringTag', assert => {
-  assert.strictEqual(Map.prototype[Symbol.toStringTag], 'Map', 'Map::@@toStringTag is `Map`');
-  assert.strictEqual(String(new Map()), '[object Map]', 'correct stringification');
+  assert.same(Map.prototype[Symbol.toStringTag], 'Map', 'Map::@@toStringTag is `Map`');
+  assert.same(String(new Map()), '[object Map]', 'correct stringification');
 });
 
 QUnit.test('Map Iterator', assert => {
@@ -319,14 +325,14 @@ QUnit.test('Map Iterator', assert => {
   assert.nonEnumerable(iterator, 'next');
   assert.nonEnumerable(iterator, Symbol.iterator);
   results.push(iterator.next().value);
-  assert.ok(map.delete('a'));
-  assert.ok(map.delete('b'));
-  assert.ok(map.delete('c'));
+  assert.true(map.delete('a'));
+  assert.true(map.delete('b'));
+  assert.true(map.delete('c'));
   map.set('e');
   results.push(iterator.next().value, iterator.next().value);
-  assert.ok(iterator.next().done);
+  assert.true(iterator.next().done);
   map.set('f');
-  assert.ok(iterator.next().done);
+  assert.true(iterator.next().done);
   assert.deepEqual(results, ['a', 'd', 'e']);
 });
 
@@ -343,7 +349,7 @@ QUnit.test('Map#keys', assert => {
   const iterator = map.keys();
   assert.isIterator(iterator);
   assert.isIterable(iterator);
-  assert.strictEqual(iterator[Symbol.toStringTag], 'Map Iterator');
+  assert.same(iterator[Symbol.toStringTag], 'Map Iterator');
   assert.deepEqual(iterator.next(), {
     value: 'a',
     done: false,
@@ -375,7 +381,7 @@ QUnit.test('Map#values', assert => {
   const iterator = map.values();
   assert.isIterator(iterator);
   assert.isIterable(iterator);
-  assert.strictEqual(iterator[Symbol.toStringTag], 'Map Iterator');
+  assert.same(iterator[Symbol.toStringTag], 'Map Iterator');
   assert.deepEqual(iterator.next(), {
     value: 'q',
     done: false,
@@ -407,7 +413,7 @@ QUnit.test('Map#entries', assert => {
   const iterator = map.entries();
   assert.isIterator(iterator);
   assert.isIterable(iterator);
-  assert.strictEqual(iterator[Symbol.toStringTag], 'Map Iterator');
+  assert.same(iterator[Symbol.toStringTag], 'Map Iterator');
   assert.deepEqual(iterator.next(), {
     value: ['a', 'q'],
     done: false,
@@ -431,7 +437,7 @@ QUnit.test('Map#@@iterator', assert => {
   assert.name(Map.prototype.entries, 'entries');
   assert.arity(Map.prototype.entries, 0);
   assert.looksNative(Map.prototype[Symbol.iterator]);
-  assert.strictEqual(Map.prototype[Symbol.iterator], Map.prototype.entries);
+  assert.same(Map.prototype[Symbol.iterator], Map.prototype.entries);
   const map = new Map();
   map.set('a', 'q');
   map.set('s', 'w');
@@ -439,8 +445,8 @@ QUnit.test('Map#@@iterator', assert => {
   const iterator = map[Symbol.iterator]();
   assert.isIterator(iterator);
   assert.isIterable(iterator);
-  assert.strictEqual(iterator[Symbol.toStringTag], 'Map Iterator');
-  assert.strictEqual(String(iterator), '[object Map Iterator]');
+  assert.same(iterator[Symbol.toStringTag], 'Map Iterator');
+  assert.same(String(iterator), '[object Map Iterator]');
   assert.deepEqual(iterator.next(), {
     value: ['a', 'q'],
     done: false,

@@ -93,15 +93,32 @@ export const data = {
     safari: '9.0',
     rhino: '1.7.13',
   },
+  'es.error.cause': {
+    chrome: '94',
+    firefox: '91',
+    safari: '15.0',
+  },
+  'es.error.to-string': {
+    chrome: '33',
+    firefox: '11',
+    ie: '9',
+    safari: '8.0',
+    rhino: '1.7.14',
+  },
   'es.aggregate-error': {
     chrome: '85',
     firefox: '79',
     safari: '14.0',
   },
+  'es.aggregate-error.cause': {
+    chrome: '94',
+    firefox: '91',
+    safari: '15.0',
+  },
   'es.array.at': {
     chrome: '92',
     firefox: '90',
-    safari: '15.1',
+    safari: '15.4',
   },
   'es.array.concat': {
     chrome: '51',
@@ -300,6 +317,7 @@ export const data = {
     firefox: '29',
     ie: '11',
     safari: '7.1',
+    rhino: '1.7.14',
   },
   'es.array-buffer.slice': {
     chrome: '31',
@@ -409,6 +427,7 @@ export const data = {
     chrome: '71',
     firefox: '65',
     safari: '12.1',
+    rhino: '1.7.14',
   },
   'es.json.stringify': {
     chrome: '72',
@@ -565,6 +584,7 @@ export const data = {
     edge: '12',
     firefox: '25',
     safari: '9.0',
+    rhino: '1.7.14',
   },
   'es.number.is-finite': {
     android: '4.1',
@@ -614,11 +634,20 @@ export const data = {
     chrome: '35',
     firefox: '39',
     safari: '11.0',
+    rhino: '1.7.14',
   },
   'es.number.parse-int': {
     chrome: '35',
     firefox: '39',
     safari: '9.0',
+    rhino: '1.7.14',
+  },
+  'es.number.to-exponential': {
+    chrome: '51',
+    edge: '18',
+    firefox: '87',
+    safari: '11',
+    rhino: '1.7.14',
   },
   'es.number.to-fixed': {
     chrome: '26',
@@ -656,7 +685,7 @@ export const data = {
     rhino: '1.7.13',
   },
   'es.object.define-properties': {
-    chrome: '5',
+    chrome: '37',
     firefox: '4',
     ie: '9',
     opera: '12',
@@ -664,7 +693,7 @@ export const data = {
     rhino: '1.7.13',
   },
   'es.object.define-property': {
-    chrome: '5',
+    chrome: '37',
     firefox: '4',
     ie: '9',
     opera: '12',
@@ -683,6 +712,7 @@ export const data = {
     edge: '14',
     firefox: '47',
     safari: '10.1',
+    rhino: '1.7.14',
   },
   'es.object.freeze': {
     chrome: '44',
@@ -695,6 +725,7 @@ export const data = {
     chrome: '73',
     firefox: '63',
     safari: '12.1',
+    rhino: '1.7.14',
   },
   'es.object.get-own-property-descriptor': {
     chrome: '44',
@@ -726,6 +757,7 @@ export const data = {
   'es.object.has-own': {
     chrome: '93',
     firefox: '92',
+    safari: '15.4',
   },
   'es.object.is': {
     android: '4.1',
@@ -809,6 +841,7 @@ export const data = {
     edge: '14',
     firefox: '47',
     safari: '10.1',
+    rhino: '1.7.14',
   },
   'es.parse-float': {
     chrome: '35',
@@ -982,7 +1015,7 @@ export const data = {
   'es.string.at-alternative': {
     chrome: '92',
     firefox: '90',
-    safari: '15.1',
+    safari: '15.4',
   },
   'es.string.code-point-at': {
     chrome: '41',
@@ -1045,6 +1078,7 @@ export const data = {
     edge: '13',
     firefox: '34',
     safari: '9.0',
+    rhino: '1.7.14',
   },
   'es.string.repeat': {
     chrome: '41',
@@ -1108,6 +1142,7 @@ export const data = {
     edge: '12',
     firefox: '17',
     safari: '6.0',
+    rhino: '1.7.14',
   },
   'es.string.big': {
     chrome: '5',
@@ -1146,12 +1181,14 @@ export const data = {
     edge: '12',
     firefox: '17',
     safari: '6.0',
+    rhino: '1.7.14',
   },
   'es.string.fontsize': {
     chrome: '5',
     edge: '12',
     firefox: '17',
     safari: '6.0',
+    rhino: '1.7.14',
   },
   'es.string.italics': {
     chrome: '5',
@@ -1166,6 +1203,7 @@ export const data = {
     edge: '12',
     firefox: '17',
     safari: '6.0',
+    rhino: '1.7.14',
   },
   'es.string.small': {
     chrome: '5',
@@ -1256,7 +1294,7 @@ export const data = {
   'es.typed-array.at': {
     chrome: '92',
     firefox: '90',
-    safari: '15.1',
+    safari: '15.4',
   },
   'es.typed-array.copy-within': {
     chrome: '45',
@@ -1319,7 +1357,7 @@ export const data = {
     safari: '10.0',
   },
   'es.typed-array.iterator': {
-    chrome: '47',
+    chrome: '51',
     edge: '13',
     firefox: '37',
     safari: '10.0',
@@ -1367,10 +1405,10 @@ export const data = {
     safari: '10.0',
   },
   'es.typed-array.set': {
-    chrome: '26',
-    edge: '13',
-    firefox: '15',
-    safari: '7.1',
+    chrome: '95',   // '26',
+    // edge: '13',  // proper in Chakra Edge 13, but buggy in Chromium < 95
+    firefox: '54',  // '15',
+    safari: '14.1', // '7.1',
   },
   'es.typed-array.slice': {
     chrome: '45',
@@ -1395,6 +1433,7 @@ export const data = {
     edge: '13',
     firefox: '15',
     safari: '7.1',
+    rhino: '1.7.14',
   },
   'es.typed-array.to-locale-string': {
     chrome: '45',
@@ -1441,12 +1480,16 @@ export const data = {
   'esnext.array.filter-reject': {
   },
   'esnext.array.find-last': {
-    safari: '15.1',
+    chrome: '97',
+    safari: '15.4',
   },
   'esnext.array.find-last-index': {
-    safari: '15.1',
+    chrome: '97',
+    safari: '15.4',
   },
   'esnext.array.group-by': {
+  },
+  'esnext.array.group-by-to-map': {
   },
   'esnext.array.is-template-object': {
   },
@@ -1456,7 +1499,15 @@ export const data = {
   // TODO: Remove from `core-js@4`
   'esnext.array.last-item': {
   },
+  'esnext.array.to-reversed': {
+  },
+  'esnext.array.to-sorted': {
+  },
+  'esnext.array.to-spliced': {
+  },
   'esnext.array.unique-by': {
+  },
+  'esnext.array.with': {
   },
   'esnext.async-iterator.constructor': {
   },
@@ -1492,6 +1543,12 @@ export const data = {
   },
   'esnext.composite-symbol': {
   },
+  'esnext.function.is-callable': {
+  },
+  'esnext.function.is-constructor': {
+  },
+  'esnext.function.un-this': {
+  },
   // TODO: Remove from `core-js@4`
   'esnext.global-this': null,
   'esnext.iterator.constructor': {
@@ -1521,6 +1578,8 @@ export const data = {
   'esnext.iterator.take': {
   },
   'esnext.iterator.to-array': {
+  },
+  'esnext.iterator.to-async': {
   },
   'esnext.map.delete-all': {
   },
@@ -1685,6 +1744,8 @@ export const data = {
   // TODO: Remove from `core-js@4`
   'esnext.string.at': {
   },
+  'esnext.string.cooked': {
+  },
   'esnext.string.code-points': {
   },
   // TODO: Remove from `core-js@4`
@@ -1707,6 +1768,7 @@ export const data = {
   // TODO: Remove from `core-js@4`
   'esnext.symbol.replace-all': {
   },
+  // TODO: Remove from `core-js@4`
   'esnext.typed-array.from-async': {
   },
   // TODO: Remove from `core-js@4`
@@ -1717,14 +1779,25 @@ export const data = {
   'esnext.typed-array.filter-reject': {
   },
   'esnext.typed-array.find-last': {
-    safari: '15.1',
+    chrome: '97',
+    safari: '15.4',
   },
   'esnext.typed-array.find-last-index': {
-    safari: '15.1',
+    chrome: '97',
+    safari: '15.4',
   },
+  // TODO: Remove from `core-js@4`
   'esnext.typed-array.group-by': {
   },
+  'esnext.typed-array.to-reversed': {
+  },
+  'esnext.typed-array.to-sorted': {
+  },
+  'esnext.typed-array.to-spliced': {
+  },
   'esnext.typed-array.unique-by': {
+  },
+  'esnext.typed-array.with': {
   },
   'esnext.weak-map.delete-all': {
   },
@@ -1745,8 +1818,29 @@ export const data = {
   },
   'esnext.weak-set.of': {
   },
+  'web.atob': {
+    chrome: '34',
+    deno: '1.0',
+    edge: '13',
+    firefox: '27',
+    // https://github.com/nodejs/node/issues/41450
+    node: '17.5', // '16.0',
+    opera: '10.5',
+    safari: '10.1',
+  },
+  'web.btoa': {
+    chrome: '4',
+    deno: '1.0',
+    firefox: '1',
+    ie: '10',
+    // https://github.com/nodejs/node/issues/41450
+    node: '17.5', // '16.0',
+    opera: '10.5',
+    safari: '3.0',
+  },
   'web.dom-collections.for-each': {
     chrome: '58',
+    deno: '1.0',
     edge: '16',
     firefox: '50',
     node: '0.0.1',
@@ -1755,10 +1849,30 @@ export const data = {
   },
   'web.dom-collections.iterator': {
     chrome: '66',
+    deno: '1.0',
     firefox: '60',
     node: '0.0.1',
     safari: '13.1',
     rhino: '1.7.13',
+  },
+  'web.dom-exception.constructor': {
+    chrome: '46',
+    deno: '1.7',
+    firefox: '37',
+    node: '17.0',
+    safari: '11.1',
+  },
+  'web.dom-exception.stack': {
+    deno: '1.7',
+    firefox: '37',
+    node: '17.0',
+  },
+  'web.dom-exception.to-string-tag': {
+    chrome: '49',
+    deno: '1.7',
+    firefox: '51',
+    node: '17.0',
+    safari: '11.1',
   },
   'web.immediate': {
     ie: '10',
@@ -1766,14 +1880,23 @@ export const data = {
   },
   'web.queue-microtask': {
     chrome: '71',
+    deno: '1.0',
     firefox: '69',
     // Node.js 11 shows ExperimentalWarning on getting `queueMicrotask`
     node: '12.0', // '11.0',
     safari: '12.1',
   },
+  'web.structured-clone': {
+    // https://github.com/whatwg/html/pull/5749
+    // deno: '1.14',
+    // current FF implementation can't clone errors
+    // firefox: '94',
+    // node: '17.0',
+  },
   'web.timers': {
     android: '1.5',
     chrome: '1',
+    deno: '1.0',
     firefox: '1',
     ie: '10',
     node: '0.0.1',
@@ -1783,18 +1906,21 @@ export const data = {
   },
   'web.url': {
     chrome: '67',
+    deno: '1.0',
     firefox: '57',
     node: '10.0',
     safari: '14.0',
   },
   'web.url.to-json': {
     chrome: '71',
+    deno: '1.0',
     firefox: '57',
     node: '10.0',
     safari: '14.0',
   },
   'web.url-search-params': {
     chrome: '67',
+    deno: '1.0',
     firefox: '57',
     node: '10.0',
     safari: '14.0',

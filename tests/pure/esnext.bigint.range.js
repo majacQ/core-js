@@ -1,5 +1,5 @@
 /* eslint-disable es/no-bigint -- safe */
-import from from 'core-js-pure/features/array/from';
+import from from 'core-js-pure/es/array/from';
 import range from 'core-js-pure/features/bigint/range';
 
 if (typeof BigInt == 'function') QUnit.test('BigInt.range', assert => {
@@ -33,19 +33,19 @@ if (typeof BigInt == 'function') QUnit.test('BigInt.range', assert => {
   assert.deepEqual(iterator.start, BigInt(1));
   assert.deepEqual(iterator.end, BigInt(3));
   assert.deepEqual(iterator.step, BigInt(1));
-  assert.deepEqual(iterator.inclusive, false);
+  assert.false(iterator.inclusive);
 
   iterator = range(BigInt(-1), BigInt(-3), { inclusive: true });
   assert.deepEqual(iterator.start, BigInt(-1));
   assert.deepEqual(iterator.end, BigInt(-3));
   assert.same(iterator.step, BigInt(-1));
-  assert.same(iterator.inclusive, true);
+  assert.true(iterator.inclusive);
 
   iterator = range(BigInt(-1), BigInt(-3), { step: BigInt(4), inclusive() { /* empty */ } });
   assert.same(iterator.start, BigInt(-1));
   assert.same(iterator.end, BigInt(-3));
   assert.same(iterator.step, BigInt(4));
-  assert.same(iterator.inclusive, true);
+  assert.true(iterator.inclusive);
 
   iterator = range(BigInt(0), BigInt(5));
   // eslint-disable-next-line es/no-object-getownpropertydescriptor -- safe

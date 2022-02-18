@@ -8,10 +8,10 @@ if (PROTO) QUnit.test('Reflect.setPrototypeOf', assert => {
   assert.looksNative(setPrototypeOf);
   assert.nonEnumerable(Reflect, 'setPrototypeOf');
   let object = {};
-  assert.ok(setPrototypeOf(object, Array.prototype), true);
-  assert.ok(object instanceof Array);
+  assert.true(setPrototypeOf(object, Array.prototype));
+  assert.true(object instanceof Array);
   assert.throws(() => setPrototypeOf({}, 42), TypeError);
   assert.throws(() => setPrototypeOf(42, {}), TypeError, 'throws on primitive');
   object = {};
-  assert.ok(setPrototypeOf(object, object) === false, 'false on recursive __proto__');
+  assert.false(setPrototypeOf(object, object), 'false on recursive __proto__');
 });

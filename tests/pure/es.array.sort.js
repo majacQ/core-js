@@ -1,6 +1,6 @@
 import { STRICT } from '../helpers/constants';
 
-import sort from 'core-js-pure/features/array/sort';
+import sort from 'core-js-pure/es/array/sort';
 
 QUnit.test('Array#sort', assert => {
   assert.isFunction(sort);
@@ -81,9 +81,9 @@ QUnit.test('Array#sort', assert => {
 
   sort(array, (a, b) => (a / 4 | 0) - (b / 4 | 0));
 
-  assert.ok(1 / sort([0, -0])[0] > 0, '-0');
+  assert.true(1 / sort([0, -0])[0] > 0, '-0');
 
-  assert.same(String(array), String(expected), 'stable #1');
+  assert.arrayEqual(array, expected, 'stable #1');
 
   let result = '';
   array = [];
@@ -113,7 +113,7 @@ QUnit.test('Array#sort', assert => {
   assert.same(result, 'DGBEFHACIJK', 'stable #2');
 
   /* eslint-disable es/no-symbol -- safe */
-  if (typeof Symbol === 'function') {
+  if (typeof Symbol == 'function') {
     assert.throws(() => sort([Symbol(1), Symbol(2)]), 'w/o cmp throws on symbols');
   }
 

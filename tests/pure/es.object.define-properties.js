@@ -1,6 +1,6 @@
 import { DESCRIPTORS } from '../helpers/constants';
 
-import defineProperties from 'core-js-pure/features/object/define-properties';
+import defineProperties from 'core-js-pure/es/object/define-properties';
 
 QUnit.test('Object.defineProperties', assert => {
   assert.isFunction(defineProperties);
@@ -10,6 +10,14 @@ QUnit.test('Object.defineProperties', assert => {
   assert.same(result, source);
   assert.same(result.q, 42);
   assert.same(result.w, 33);
+
+  if (DESCRIPTORS) {
+    // eslint-disable-next-line prefer-arrow-callback -- required for testing
+    assert.same(defineProperties(function () { /* empty */ }, { prototype: {
+      value: 42,
+      writable: false,
+    } }).prototype, 42, 'function prototype with non-writable descriptor');
+  }
 });
 
 QUnit.test('Object.defineProperties.sham flag', assert => {

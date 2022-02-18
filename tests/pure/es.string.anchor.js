@@ -1,4 +1,4 @@
-import anchor from 'core-js-pure/features/string/anchor';
+import anchor from 'core-js-pure/es/string/anchor';
 
 QUnit.test('String#anchor', assert => {
   assert.isFunction(anchor);
@@ -6,7 +6,7 @@ QUnit.test('String#anchor', assert => {
   assert.same(anchor('a', '"'), '<a name="&quot;">a</a>', 'escape quotes');
 
   /* eslint-disable es/no-symbol -- safe */
-  if (typeof Symbol === 'function') {
+  if (typeof Symbol == 'function') {
     assert.throws(() => anchor(Symbol(), 'b'), 'throws on symbol context');
     assert.throws(() => anchor('a', Symbol()), 'throws on symbol argument');
   }

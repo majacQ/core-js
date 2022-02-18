@@ -16,7 +16,7 @@ const { banner } = require('./config');
 
 function normalizeSummary(unit = {}) {
   let size, modules;
-  if (typeof unit !== 'object') {
+  if (typeof unit != 'object') {
     size = modules = !!unit;
   } else {
     size = !!unit.size;
@@ -76,8 +76,9 @@ module.exports = async function ({
       },
       entry: modules.map(it => require.resolve(`core-js/modules/${ it }`)),
       output: {
-        path: tmpdir,
         filename: tempFileName,
+        hashFunction: 'md5',
+        path: tmpdir,
       },
     });
 

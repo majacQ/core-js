@@ -1,6 +1,6 @@
 import { DESCRIPTORS } from '../helpers/constants';
 
-import getOwnPropertyDescriptor from 'core-js-pure/features/reflect/get-own-property-descriptor';
+import getOwnPropertyDescriptor from 'core-js-pure/es/reflect/get-own-property-descriptor';
 
 QUnit.test('Reflect.getOwnPropertyDescriptor', assert => {
   assert.isFunction(getOwnPropertyDescriptor);
@@ -10,7 +10,7 @@ QUnit.test('Reflect.getOwnPropertyDescriptor', assert => {
   }
   const object = { baz: 789 };
   const descriptor = getOwnPropertyDescriptor(object, 'baz');
-  assert.strictEqual(descriptor.value, 789);
+  assert.same(descriptor.value, 789);
   assert.throws(() => getOwnPropertyDescriptor(42, 'constructor'), TypeError, 'throws on primitive');
 });
 

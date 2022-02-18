@@ -1,8 +1,8 @@
 import { STRICT } from '../helpers/constants';
 
-import Symbol from 'core-js-pure/features/symbol';
+import Symbol from 'core-js-pure/es/symbol';
+import getPrototypeOf from 'core-js-pure/es/object/get-prototype-of';
 import groupBy from 'core-js-pure/features/array/group-by';
-import getPrototypeOf from 'core-js-pure/features/object/get-prototype-of';
 
 QUnit.test('Array#groupBy', assert => {
   assert.isFunction(groupBy);
@@ -24,13 +24,13 @@ QUnit.test('Array#groupBy', assert => {
   );
   assert.deepEqual(groupBy(Array(3), it => it), { undefined: [undefined, undefined, undefined] }, '#3');
   if (STRICT) {
-    assert.throws(() => groupBy(null, () => { /* empty */ }), TypeError);
-    assert.throws(() => groupBy(undefined, () => { /* empty */ }), TypeError);
+    assert.throws(() => groupBy(null, () => { /* empty */ }), TypeError, 'null this -> TypeError');
+    assert.throws(() => groupBy(undefined, () => { /* empty */ }), TypeError, 'undefined this -> TypeError');
   }
   array = [1];
   // eslint-disable-next-line object-shorthand -- constructor
   array.constructor = { [Symbol.species]: function () {
     return { foo: 1 };
   } };
-  assert.same(groupBy(array, Boolean).true.foo, 1, '@@species');
+  assert.same(groupBy(array, Boolean).true.foo, undefined, 'no @@species');
 });

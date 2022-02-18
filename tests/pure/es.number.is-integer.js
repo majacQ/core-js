@@ -1,5 +1,5 @@
-import isInteger from 'core-js-pure/features/number/is-integer';
-import create from 'core-js-pure/features/object/create';
+import create from 'core-js-pure/es/object/create';
+import isInteger from 'core-js-pure/es/number/is-integer';
 
 QUnit.test('Number.isInteger', assert => {
   assert.isFunction(isInteger);
@@ -15,7 +15,7 @@ QUnit.test('Number.isInteger', assert => {
     -0,
   ];
   for (const value of integers) {
-    assert.ok(isInteger(value), `isInteger ${ typeof value } ${ value }`);
+    assert.true(isInteger(value), `isInteger ${ typeof value } ${ value }`);
   }
   const notIntegers = [
     NaN,
@@ -34,7 +34,7 @@ QUnit.test('Number.isInteger', assert => {
     function () { /* empty */ },
   ];
   for (const value of notIntegers) {
-    assert.ok(!isInteger(value), `not isInteger ${ typeof value } ${ value }`);
+    assert.false(isInteger(value), `not isInteger ${ typeof value } ${ value }`);
   }
-  assert.ok(!isInteger(create(null)), 'Number.isInteger(Object.create(null)) -> false');
+  assert.false(isInteger(create(null)), 'Number.isInteger(Object.create(null)) -> false');
 });

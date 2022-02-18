@@ -1,7 +1,11 @@
 import { DESCRIPTORS } from '../helpers/constants';
 import { createIterable } from '../helpers/helpers';
 
-import { Symbol, URL, URLSearchParams } from 'core-js-pure';
+import getPrototypeOf from 'core-js-pure/es/object/get-prototype-of';
+import getOwnPropertyDescriptor from 'core-js-pure/es/object/get-own-property-descriptor';
+import Symbol from 'core-js-pure/es/symbol';
+import URL from 'core-js-pure/stable/url';
+import URLSearchParams from 'core-js-pure/stable/url-search-params';
 
 QUnit.test('URLSearchParams', assert => {
   assert.isFunction(URLSearchParams);
@@ -31,20 +35,20 @@ QUnit.test('URLSearchParams', assert => {
   assert.same(String(new URLSearchParams('a==b')), 'a=%3Db');
 
   let params = new URLSearchParams('a=b');
-  assert.same(params.has('a'), true, 'search params object has name "a"');
-  assert.same(params.has('b'), false, 'search params object has not got name "b"');
+  assert.true(params.has('a'), 'search params object has name "a"');
+  assert.false(params.has('b'), 'search params object has not got name "b"');
 
   params = new URLSearchParams('a=b&c');
-  assert.same(params.has('a'), true, 'search params object has name "a"');
-  assert.same(params.has('c'), true, 'search params object has name "c"');
+  assert.true(params.has('a'), 'search params object has name "a"');
+  assert.true(params.has('c'), 'search params object has name "c"');
 
   params = new URLSearchParams('&a&&& &&&&&a+b=& c&m%c3%b8%c3%b8');
-  assert.same(params.has('a'), true, 'search params object has name "a"');
-  assert.same(params.has('a b'), true, 'search params object has name "a b"');
-  assert.same(params.has(' '), true, 'search params object has name " "');
-  assert.same(params.has('c'), false, 'search params object did not have the name "c"');
-  assert.same(params.has(' c'), true, 'search params object has name " c"');
-  assert.same(params.has('møø'), true, 'search params object has name "møø"');
+  assert.true(params.has('a'), 'search params object has name "a"');
+  assert.true(params.has('a b'), 'search params object has name "a b"');
+  assert.true(params.has(' '), 'search params object has name " "');
+  assert.false(params.has('c'), 'search params object did not have the name "c"');
+  assert.true(params.has(' c'), 'search params object has name " c"');
+  assert.true(params.has('møø'), 'search params object has name "møø"');
 
   params = new URLSearchParams('a=b+c');
   assert.same(params.get('a'), 'b c', 'parse +');
@@ -177,7 +181,7 @@ QUnit.test('URLSearchParams#append', assert => {
   params.append('second', 2);
   params.append('third', '');
   params.append('first', 10);
-  assert.ok(params.has('first'), 'search params object has name "first"');
+  assert.true(params.has('first'), 'search params object has name "first"');
   assert.same(params.get('first'), '1', 'search params object has name "first" with value "1"');
   assert.same(params.get('second'), '2', 'search params object has name "second" with value "2"');
   assert.same(params.get('third'), '', 'search params object has name "third" with value ""');
@@ -217,14 +221,14 @@ QUnit.test('URLSearchParams#delete', assert => {
 
   params = new URLSearchParams();
   params.append('first', 1);
-  assert.same(params.has('first'), true, 'search params object has name "first"');
+  assert.true(params.has('first'), 'search params object has name "first"');
   assert.same(params.get('first'), '1', 'search params object has name "first" with value "1"');
   params.delete('first');
-  assert.same(params.has('first'), false, 'search params object has no "first" name');
+  assert.false(params.has('first'), 'search params object has no "first" name');
   params.append('first', 1);
   params.append('first', 10);
   params.delete('first');
-  assert.same(params.has('first'), false, 'search params object has no "first" name');
+  assert.false(params.has('first'), 'search params object has no "first" name');
 
   if (DESCRIPTORS) {
     let url = new URL('http://example.com/?param1&param2');
@@ -265,7 +269,7 @@ QUnit.test('URLSearchParams#get', assert => {
   assert.same(params.get('a'), '');
 
   params = new URLSearchParams('first=second&third&&');
-  assert.same(params.has('first'), true, 'Search params object has name "first"');
+  assert.true(params.has('first'), 'Search params object has name "first"');
   assert.same(params.get('first'), 'second', 'Search params object has name "first" with value "second"');
   assert.same(params.get('third'), '', 'Search params object has name "third" with the empty value.');
   assert.same(params.get('fourth'), null, 'Search params object has no "fourth" name and value.');
@@ -346,28 +350,28 @@ QUnit.test('URLSearchParams#has', assert => {
   assert.enumerable(URLSearchParams.prototype, 'has');
 
   let params = new URLSearchParams('a=b&c=d');
-  assert.same(params.has('a'), true);
-  assert.same(params.has('c'), true);
-  assert.same(params.has('e'), false);
+  assert.true(params.has('a'));
+  assert.true(params.has('c'));
+  assert.false(params.has('e'));
 
   params = new URLSearchParams('a=b&c=d&a=e');
-  assert.same(params.has('a'), true);
+  assert.true(params.has('a'));
 
   params = new URLSearchParams('=b&c=d');
-  assert.same(params.has(''), true);
+  assert.true(params.has(''));
 
   params = new URLSearchParams('null=a');
-  assert.same(params.has(null), true);
+  assert.true(params.has(null));
 
   params = new URLSearchParams('a=b&c=d&&');
   params.append('first', 1);
   params.append('first', 2);
-  assert.same(params.has('a'), true, 'search params object has name "a"');
-  assert.same(params.has('c'), true, 'search params object has name "c"');
-  assert.same(params.has('first'), true, 'search params object has name "first"');
-  assert.same(params.has('d'), false, 'search params object has no name "d"');
+  assert.true(params.has('a'), 'search params object has name "a"');
+  assert.true(params.has('c'), 'search params object has name "c"');
+  assert.true(params.has('first'), 'search params object has name "first"');
+  assert.false(params.has('d'), 'search params object has no name "d"');
   params.delete('first');
-  assert.same(params.has('first'), false, 'search params object has no name "first"');
+  assert.false(params.has('first'), 'search params object has no name "first"');
 
   assert.throws(() => {
     return new URLSearchParams('').has();
@@ -391,14 +395,14 @@ QUnit.test('URLSearchParams#set', assert => {
   assert.same(String(params), 'a=B&c=d&e=f');
 
   params = new URLSearchParams('a=1&a=2&a=3');
-  assert.same(params.has('a'), true, 'search params object has name "a"');
+  assert.true(params.has('a'), 'search params object has name "a"');
   assert.same(params.get('a'), '1', 'search params object has name "a" with value "1"');
   params.set('first', 4);
-  assert.same(params.has('a'), true, 'search params object has name "a"');
+  assert.true(params.has('a'), 'search params object has name "a"');
   assert.same(params.get('a'), '1', 'search params object has name "a" with value "1"');
   assert.same(String(params), 'a=1&a=2&a=3&first=4');
   params.set('a', 4);
-  assert.same(params.has('a'), true, 'search params object has name "a"');
+  assert.true(params.has('a'), 'search params object has name "a"');
   assert.same(params.get('a'), '4', 'search params object has name "a" with value "4"');
   assert.same(String(params), 'a=4&first=4');
 
@@ -615,7 +619,7 @@ QUnit.test('URLSearchParams#forEach', assert => {
   assert.same(result, 'abc');
 
   new URL('http://a.b/c').searchParams.forEach(() => {
-    assert.ok(false, 'should not be called');
+    assert.avoid();
   });
 
   // fails in Chrome 66-
@@ -659,7 +663,7 @@ QUnit.test('URLSearchParams#entries', assert => {
   }
   assert.same(result, 'abc');
 
-  assert.ok(new URL('http://a.b/c').searchParams.entries().next().done, 'should be finished');
+  assert.true(new URL('http://a.b/c').searchParams.entries().next().done, 'should be finished');
 
   // fails in Chrome 66-
   if (DESCRIPTORS) {
@@ -684,6 +688,8 @@ QUnit.test('URLSearchParams#entries', assert => {
     result += key + value;
   }
   assert.same(result, 'a1c3');
+
+  if (DESCRIPTORS) assert.true(getOwnPropertyDescriptor(getPrototypeOf(new URLSearchParams().entries()), 'next').enumerable, 'enumerable .next');
 });
 
 QUnit.test('URLSearchParams#keys', assert => {
@@ -700,7 +706,7 @@ QUnit.test('URLSearchParams#keys', assert => {
   }
   assert.same(result, 'abc');
 
-  assert.ok(new URL('http://a.b/c').searchParams.keys().next().done, 'should be finished');
+  assert.true(new URL('http://a.b/c').searchParams.keys().next().done, 'should be finished');
 
   // fails in Chrome 66-
   if (DESCRIPTORS) {
@@ -725,6 +731,8 @@ QUnit.test('URLSearchParams#keys', assert => {
     result += key;
   }
   assert.same(result, 'ac');
+
+  if (DESCRIPTORS) assert.true(getOwnPropertyDescriptor(getPrototypeOf(new URLSearchParams().keys()), 'next').enumerable, 'enumerable .next');
 });
 
 QUnit.test('URLSearchParams#values', assert => {
@@ -741,7 +749,7 @@ QUnit.test('URLSearchParams#values', assert => {
   }
   assert.same(result, '123');
 
-  assert.ok(new URL('http://a.b/c').searchParams.values().next().done, 'should be finished');
+  assert.true(new URL('http://a.b/c').searchParams.values().next().done, 'should be finished');
 
   // fails in Chrome 66-
   if (DESCRIPTORS) {
@@ -766,6 +774,8 @@ QUnit.test('URLSearchParams#values', assert => {
     result += key;
   }
   assert.same(result, '13');
+
+  if (DESCRIPTORS) assert.true(getOwnPropertyDescriptor(getPrototypeOf(new URLSearchParams().values()), 'next').enumerable, 'enumerable .next');
 });
 
 QUnit.test('URLSearchParams#@@iterator', assert => {
@@ -788,7 +798,7 @@ QUnit.test('URLSearchParams#@@iterator', assert => {
   }
   assert.same(result, 'abc');
 
-  assert.ok(new URL('http://a.b/c').searchParams[Symbol.iterator]().next().done, 'should be finished');
+  assert.true(new URL('http://a.b/c').searchParams[Symbol.iterator]().next().done, 'should be finished');
 
   // fails in Chrome 66-
   if (DESCRIPTORS) {
@@ -813,4 +823,6 @@ QUnit.test('URLSearchParams#@@iterator', assert => {
     result += key + value;
   }
   assert.same(result, 'a1c3');
+
+  if (DESCRIPTORS) assert.true(getOwnPropertyDescriptor(getPrototypeOf(new URLSearchParams()[Symbol.iterator]()), 'next').enumerable, 'enumerable .next');
 });

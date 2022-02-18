@@ -5,8 +5,8 @@ function getCheck(assert) {
   return function (a, b) {
     assert.same(Number(a), b, `Number ${ typeof a } ${ a } -> ${ b }`);
     const x = new Number(a);
-    assert.ok(x === Object(x), `new Number ${ typeof a } ${ a } is object`);
-    assert.strictEqual({}.toString.call(x).slice(8, -1), 'Number', `classof new Number ${ typeof a } ${ a } is Number`);
+    assert.same(x, Object(x), `new Number ${ typeof a } ${ a } is object`);
+    assert.same({}.toString.call(x).slice(8, -1), 'Number', `classof new Number ${ typeof a } ${ a } is Number`);
     assert.same(x.valueOf(), b, `new Number(${ typeof a } ${ a }).valueOf() -> ${ b }`);
   };
 }
@@ -21,7 +21,7 @@ QUnit.test('Number constructor: regression', assert => {
   assert.same(1.0.constructor, Number);
   const constants = ['MAX_VALUE', 'MIN_VALUE', 'NaN', 'NEGATIVE_INFINITY', 'POSITIVE_INFINITY'];
   for (const constant of constants) {
-    assert.ok(constant in Number, `Number.${ constant }`);
+    assert.true(constant in Number, `Number.${ constant }`);
     assert.nonEnumerable(Number, constant);
   }
   assert.same(Number(), 0);
@@ -122,33 +122,33 @@ QUnit.test('Number constructor: regression', assert => {
     },
   }, 2);
   let number = 1;
-  assert.strictEqual(Number({
+  assert.same(Number({
     valueOf() {
       return ++number;
     },
   }), 2, 'Number call valueOf only once #1');
-  assert.strictEqual(number, 2, 'Number call valueOf only once #2');
+  assert.same(number, 2, 'Number call valueOf only once #2');
   number = 1;
-  assert.strictEqual(Number({
+  assert.same(Number({
     toString() {
       return ++number;
     },
   }), 2, 'Number call toString only once #1');
-  assert.strictEqual(number, 2, 'Number call toString only once #2');
+  assert.same(number, 2, 'Number call toString only once #2');
   number = 1;
-  assert.strictEqual(new Number({
+  assert.same(new Number({
     valueOf() {
       return ++number;
     },
   }).valueOf(), 2, 'new Number call valueOf only once #1');
-  assert.strictEqual(number, 2, 'new Number call valueOf only once #2');
+  assert.same(number, 2, 'new Number call valueOf only once #2');
   number = 1;
-  assert.strictEqual(new Number({
+  assert.same(new Number({
     toString() {
       return ++number;
     },
   }).valueOf(), 2, 'new Number call toString only once #1');
-  assert.strictEqual(number, 2, 'new Number call toString only once #2');
+  assert.same(number, 2, 'new Number call toString only once #2');
   assert.throws(() => Number(Object.create(null)), TypeError, 'Number assert.throws on object w/o valueOf and toString');
   assert.throws(() => Number({
     valueOf: 1,
@@ -160,13 +160,13 @@ QUnit.test('Number constructor: regression', assert => {
     toString: 2,
   }), TypeError, 'new Number assert.throws on object then valueOf and toString are not functions');
 
-  if (typeof Symbol === 'function' && !Symbol.sham) {
+  if (typeof Symbol == 'function' && !Symbol.sham) {
     assert.throws(() => Number(Symbol()), 'throws on symbol argument');
     assert.throws(() => new Number(Symbol()), 'throws on symbol argument, new');
   }
 
   number = new Number(42);
-  assert.strictEqual(typeof number.constructor(number), 'number');
+  assert.same(typeof number.constructor(number), 'number');
   check(`${ whitespaces }42`, 42);
   check(`42${ whitespaces }`, 42);
   check(`${ whitespaces }42${ whitespaces }`, 42);
@@ -178,8 +178,8 @@ QUnit.test('Number constructor: regression', assert => {
   check(`${ whitespaces }0X42${ whitespaces }`, 66);
   if (nativeSubclass) {
     const Subclass = nativeSubclass(Number);
-    assert.ok(new Subclass() instanceof Subclass, 'correct subclassing with native classes #1');
-    assert.ok(new Subclass() instanceof Number, 'correct subclassing with native classes #2');
+    assert.true(new Subclass() instanceof Subclass, 'correct subclassing with native classes #1');
+    assert.true(new Subclass() instanceof Number, 'correct subclassing with native classes #2');
     assert.same(new Subclass(1).toFixed(2), '1.00', 'correct subclassing with native classes #3');
   }
 });

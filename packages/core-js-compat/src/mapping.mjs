@@ -57,6 +57,9 @@ export default {
     [91, '16.4'],
     [92, '16.6'],
     [93, '16.9'],
+    [94, '16.11'],
+    [95, '17.0'],
+    [96, '17.2'],
   ],
   // https://github.com/mdn/browser-compat-data/blob/main/browsers/deno.json
   ChromeToDeno: [
@@ -72,6 +75,10 @@ export default {
     [93, '1.13'],
     [94, '1.14'],
     [95, '1.15'],
+    [97, '1.16'],
+    [98, '1.18'],
+    [99, '1.19'],
+    [100, '1.20'],
   ],
   // https://github.com/Kilian/electron-to-chromium/blob/master/chromium-versions.js
   // Maybe also required to handle used Node versions?
@@ -106,7 +113,9 @@ export default {
     [91, '13.0'],
     [93, '14.0'],
     [94, '15.0'],
-    [95, '16.0'],
+    [96, '16.0'],
+    [98, '17.0'],
+    [99, '18.0'],
   ],
   // https://github.com/mdn/browser-compat-data/blob/main/browsers/samsunginternet_android.json
   ChromeToSamsung: [
@@ -157,6 +166,9 @@ export default {
     [87, 62],
     [89, 63],
     [91, 64],
+    [92, 65],
+    [94, 66],
+    [96, 67],
   ],
   ChromeToAndroid: [
     [9, '3.0'],
@@ -188,6 +200,10 @@ export default {
     ['14.0', '14.0'],
     ['14.1', '14.5'],
     ['15.0', '15.0'],
+    ['15.1', '15.1'],
+    ['15.2', '15.2'],
+    ['15.3', '15.3'],
+    ['15.4', '15.4'],
   ],
   SafariToPhantom: [
     ['4.1', '1.9'],

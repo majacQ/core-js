@@ -7,13 +7,13 @@ if (PROTO) QUnit.test('Object.setPrototypeOf', assert => {
   assert.name(setPrototypeOf, 'setPrototypeOf');
   assert.looksNative(setPrototypeOf);
   assert.nonEnumerable(Object, 'setPrototypeOf');
-  assert.ok('apply' in setPrototypeOf({}, Function.prototype), 'Parent properties in target');
-  assert.strictEqual(setPrototypeOf({ a: 2 }, {
+  assert.true('apply' in setPrototypeOf({}, Function.prototype), 'Parent properties in target');
+  assert.same(setPrototypeOf({ a: 2 }, {
     b() {
       return this.a ** 2;
     },
   }).b(), 4, 'Child and parent properties in target');
   const object = {};
-  assert.strictEqual(setPrototypeOf(object, { a: 1 }), object, 'setPrototypeOf return target');
-  assert.ok(!('toString' in setPrototypeOf({}, null)), 'Can set null as prototype');
+  assert.same(setPrototypeOf(object, { a: 1 }), object, 'setPrototypeOf return target');
+  assert.false(('toString' in setPrototypeOf({}, null)), 'Can set null as prototype');
 });

@@ -1,7 +1,7 @@
 // TODO: Remove from `core-js@4`
 import { STRICT } from '../helpers/constants';
 
-import Symbol from 'core-js-pure/features/symbol';
+import Symbol from 'core-js-pure/es/symbol';
 import filterOut from 'core-js-pure/features/array/filter-out';
 
 QUnit.test('Array#filterOut', assert => {
@@ -15,7 +15,7 @@ QUnit.test('Array#filterOut', assert => {
     assert.same(that, array, 'correct link to array in callback');
     assert.same(this, context, 'correct callback context');
   }, context);
-  assert.deepEqual([1, 2, 3, 4, 5], filterOut([1, 2, 3, 'q', {}, 4, true, 5], it => typeof it !== 'number'));
+  assert.deepEqual([1, 2, 3, 4, 5], filterOut([1, 2, 3, 'q', {}, 4, true, 5], it => typeof it != 'number'));
   if (STRICT) {
     assert.throws(() => filterOut(null, () => { /* empty */ }), TypeError);
     assert.throws(() => filterOut(undefined, () => { /* empty */ }), TypeError);

@@ -42,8 +42,8 @@ QUnit.test('String#matchAll', assert => {
   let iterator = '1111a2b3cccc'.matchAll(/(\d)(\D)/g);
   assert.isIterator(iterator);
   assert.isIterable(iterator);
-  assert.strictEqual(iterator[Symbol.toStringTag], 'RegExp String Iterator');
-  assert.strictEqual(String(iterator), '[object RegExp String Iterator]');
+  assert.same(iterator[Symbol.toStringTag], 'RegExp String Iterator');
+  assert.same(String(iterator), '[object RegExp String Iterator]');
   assert.deepEqual(iterator.next(), {
     value: assign(['1a', '1', 'a'], {
       input: '1111a2b3cccc',
@@ -126,7 +126,7 @@ QUnit.test('String#matchAll', assert => {
     assert.notThrows(() => ''.matchAll(target), `Not throws on ${ target } as the first argument`);
   }
 
-  if (DESCRIPTORS && typeof Symbol === 'function' && !Symbol.sham) {
+  if (DESCRIPTORS && typeof Symbol == 'function' && !Symbol.sham) {
     assert.throws(() => matchAll.call(Symbol(), /./), 'throws on symbol context');
     assert.throws(() => matchAll.call('a', Symbol()), 'throws on symbol argument');
   }

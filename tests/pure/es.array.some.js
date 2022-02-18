@@ -1,6 +1,6 @@
 import { STRICT } from '../helpers/constants';
 
-import some from 'core-js-pure/features/array/some';
+import some from 'core-js-pure/es/array/some';
 
 QUnit.test('Array#some', assert => {
   assert.isFunction(some);
@@ -13,11 +13,11 @@ QUnit.test('Array#some', assert => {
     assert.same(that, array, 'correct link to array in callback');
     assert.same(this, context, 'correct callback context');
   }, context);
-  assert.ok(some([1, '2', 3], it => typeof it === 'number'));
-  assert.ok(some([1, 2, 3], it => it < 3));
-  assert.ok(!some([1, 2, 3], it => it < 0));
-  assert.ok(!some([1, 2, 3], it => typeof it === 'string'));
-  assert.ok(!some([1, 2, 3], function () {
+  assert.true(some([1, '2', 3], it => typeof it == 'number'));
+  assert.true(some([1, 2, 3], it => it < 3));
+  assert.false(some([1, 2, 3], it => it < 0));
+  assert.false(some([1, 2, 3], it => typeof it == 'string'));
+  assert.false(some([1, 2, 3], function () {
     return +this !== 1;
   }, 1));
   let result = '';
@@ -25,9 +25,9 @@ QUnit.test('Array#some', assert => {
     result += key;
     return false;
   });
-  assert.ok(result === '012');
+  assert.same(result, '012');
   array = [1, 2, 3];
-  assert.ok(!some(array, (value, key, that) => that !== array));
+  assert.false(some(array, (value, key, that) => that !== array));
   if (STRICT) {
     assert.throws(() => some(null, () => { /* empty */ }), TypeError);
     assert.throws(() => some(undefined, () => { /* empty */ }), TypeError);

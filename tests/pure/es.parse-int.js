@@ -1,5 +1,5 @@
 import { WHITESPACES } from '../helpers/constants';
-import parseInt from 'core-js-pure/features/parse-int';
+import parseInt from 'core-js-pure/es/parse-int';
 
 QUnit.test('parseInt', assert => {
   assert.isFunction(parseInt);
@@ -33,7 +33,7 @@ QUnit.test('parseInt', assert => {
   assert.same(parseInt(undefined), NaN);
 
   /* eslint-disable es/no-symbol -- safe */
-  if (typeof Symbol === 'function') {
+  if (typeof Symbol == 'function') {
     assert.throws(() => parseInt(Symbol()), 'throws on symbol argument');
     assert.throws(() => parseInt(Object(Symbol())), 'throws on boxed symbol argument');
   }

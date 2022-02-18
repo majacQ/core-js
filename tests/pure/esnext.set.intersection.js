@@ -1,7 +1,7 @@
 import { createIterable } from '../helpers/helpers';
 
+import from from 'core-js-pure/es/array/from';
 import Set from 'core-js-pure/features/set';
-import from from 'core-js-pure/features/array/from';
 
 QUnit.test('Set#intersection', assert => {
   const { intersection } = Set.prototype;
@@ -12,7 +12,7 @@ QUnit.test('Set#intersection', assert => {
   assert.nonEnumerable(Set.prototype, 'intersection');
 
   const set = new Set([1]);
-  assert.ok(set.intersection([2]) !== set);
+  assert.notSame(set.intersection([2]), set);
 
   assert.deepEqual(from(new Set([1, 2, 3]).intersection([4, 5])), []);
   assert.deepEqual(from(new Set([1, 2, 3]).intersection([2, 3, 4])), [2, 3]);

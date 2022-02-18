@@ -1,13 +1,13 @@
 import { createIterable } from '../helpers/helpers';
 
+import toArray from 'core-js-pure/es/array/from';
 import Map from 'core-js-pure/features/map';
-import toArray from 'core-js-pure/features/array/from';
 
 QUnit.test('Map.from', assert => {
   const { from } = Map;
   assert.isFunction(from);
   assert.arity(from, 1);
-  assert.ok(Map.from() instanceof Map);
+  assert.true(Map.from() instanceof Map);
   assert.deepEqual(toArray(Map.from([])), []);
   assert.deepEqual(toArray(Map.from([[1, 2]])), [[1, 2]]);
   assert.deepEqual(toArray(Map.from([[1, 2], [2, 3], [1, 4]])), [[1, 4], [2, 3]]);

@@ -1,5 +1,5 @@
+import from from 'core-js-pure/es/array/from';
 import Map from 'core-js-pure/features/map';
-import from from 'core-js-pure/features/array/from';
 
 QUnit.test('Map#merge', assert => {
   const { merge } = Map.prototype;
@@ -11,8 +11,8 @@ QUnit.test('Map#merge', assert => {
 
   const map = new Map([[1, 2]]);
   const result = map.merge([[3, 4]]);
-  assert.ok(result === map);
-  assert.ok(result instanceof Map);
+  assert.same(result, map);
+  assert.true(result instanceof Map);
 
   assert.deepEqual(from(new Map([[1, 2], [3, 4]]).merge([[5, 6]])), [[1, 2], [3, 4], [5, 6]]);
   assert.deepEqual(from(new Map([[1, 2], [3, 4]]).merge([[3, 5], [5, 6]])), [[1, 2], [3, 5], [5, 6]]);

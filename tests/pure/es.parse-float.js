@@ -1,5 +1,5 @@
 import { WHITESPACES } from '../helpers/constants';
-import parseFloat from 'core-js-pure/features/parse-float';
+import parseFloat from 'core-js-pure/es/parse-float';
 
 QUnit.test('parseFloat', assert => {
   assert.isFunction(parseFloat);
@@ -16,7 +16,7 @@ QUnit.test('parseFloat', assert => {
   assert.same(parseFloat(undefined), NaN);
 
   /* eslint-disable es/no-symbol -- safe */
-  if (typeof Symbol === 'function') {
+  if (typeof Symbol == 'function') {
     assert.throws(() => parseFloat(Symbol()), 'throws on symbol argument');
     assert.throws(() => parseFloat(Object(Symbol())), 'throws on boxed symbol argument');
   }

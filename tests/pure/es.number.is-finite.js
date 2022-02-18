@@ -1,5 +1,5 @@
-import isFinite from 'core-js-pure/features/number/is-finite';
-import create from 'core-js-pure/features/object/create';
+import create from 'core-js-pure/es/object/create';
+import isFinite from 'core-js-pure/es/number/is-finite';
 
 QUnit.test('Number.isFinite', assert => {
   assert.isFunction(isFinite);
@@ -16,7 +16,7 @@ QUnit.test('Number.isFinite', assert => {
     -0,
   ];
   for (const value of finite) {
-    assert.ok(isFinite(value), `isFinite ${ typeof value } ${ value }`);
+    assert.true(isFinite(value), `isFinite ${ typeof value } ${ value }`);
   }
   const notFinite = [
     NaN,
@@ -34,7 +34,7 @@ QUnit.test('Number.isFinite', assert => {
     function () { /* empty */ },
   ];
   for (const value of notFinite) {
-    assert.ok(!isFinite(value), `not isFinite ${ typeof value } ${ value }`);
+    assert.false(isFinite(value), `not isFinite ${ typeof value } ${ value }`);
   }
-  assert.ok(!isFinite(create(null)), 'Number.isFinite(Object.create(null)) -> false');
+  assert.false(isFinite(create(null)), 'Number.isFinite(Object.create(null)) -> false');
 });

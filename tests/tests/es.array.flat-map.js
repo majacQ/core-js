@@ -1,3 +1,4 @@
+/* eslint-disable unicorn/prefer-array-flat -- reqired for testing */
 import { STRICT } from '../helpers/constants';
 
 QUnit.test('Array#flatMap', assert => {
@@ -28,5 +29,5 @@ QUnit.test('Array#flatMap', assert => {
   assert.notThrows(() => flatMap.call({ length: -1 }, () => {
     throw new Error();
   }).length === 0, 'uses ToLength');
-  assert.ok('flatMap' in Array.prototype[Symbol.unscopables], 'In Array#@@unscopables');
+  assert.true('flatMap' in Array.prototype[Symbol.unscopables], 'In Array#@@unscopables');
 });

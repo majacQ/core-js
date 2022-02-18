@@ -43,19 +43,19 @@ QUnit.test('Number.range', assert => {
   assert.deepEqual(iterator.start, 1);
   assert.deepEqual(iterator.end, 3);
   assert.deepEqual(iterator.step, 1);
-  assert.deepEqual(iterator.inclusive, false);
+  assert.false(iterator.inclusive);
 
   iterator = range(-1, -3, { inclusive: true });
   assert.deepEqual(iterator.start, -1);
   assert.deepEqual(iterator.end, -3);
   assert.same(iterator.step, -1);
-  assert.same(iterator.inclusive, true);
+  assert.true(iterator.inclusive);
 
   iterator = range(-1, -3, { step: 4, inclusive() { /* empty */ } });
   assert.same(iterator.start, -1);
   assert.same(iterator.end, -3);
   assert.same(iterator.step, 4);
-  assert.same(iterator.inclusive, true);
+  assert.true(iterator.inclusive);
 
   iterator = range(0, 5);
   assert.throws(() => Object.getOwnPropertyDescriptor(iterator, 'start').call({}), TypeError);

@@ -1,6 +1,6 @@
 import { includes } from '../helpers/helpers';
 
-import keys from 'core-js-pure/features/object/keys';
+import keys from 'core-js-pure/es/object/keys';
 
 QUnit.test('Object.keys', assert => {
   assert.isFunction(keys);
@@ -15,7 +15,7 @@ QUnit.test('Object.keys', assert => {
   assert.deepEqual(keys([1, 2, 3]), ['0', '1', '2']);
   assert.deepEqual(keys(new F1()), ['w']);
   assert.deepEqual(keys(new F2()), ['toString']);
-  assert.ok(!includes(keys(Array.prototype), 'push'));
+  assert.false(includes(keys(Array.prototype), 'push'));
   const primitives = [42, 'foo', false];
   for (const value of primitives) {
     assert.notThrows(() => keys(value), `accept ${ typeof value }`);

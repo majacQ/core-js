@@ -8,14 +8,22 @@ var NOT_WHITESPACES = '\u200B\u0085\u180E';
 var USERAGENT = GLOBAL.navigator && GLOBAL.navigator.userAgent || '';
 
 var process = GLOBAL.process;
-var v8 = process && process.versions && process.versions.v8 || '';
+var Deno = GLOBAL.Deno;
+var versions = process && process.versions || Deno && Deno.version;
+var v8 = versions && versions.v8;
 
 var match, V8_VERSION;
 
 if (v8) {
   match = v8.split('.');
-  V8_VERSION = match[0] < 4 ? 1 : +(match[0] + match[1]);
-} else if (USERAGENT) {
+  // in old Chrome, versions of V8 isn't V8 = Chrome / 10
+  // but their correct versions are not interesting for us
+  V8_VERSION = match[0] > 0 && match[0] < 4 ? 1 : +(match[0] + match[1]);
+}
+
+// BrowserFS NodeJS `process` polyfill incorrectly set `.v8` to `0.0`
+// so check `userAgent` even if `.v8` exists, but 0
+if (!V8_VERSION && USERAGENT) {
   match = USERAGENT.match(/Edge\/(\d+)/);
   if (!match || match[1] >= 74) {
     match = USERAGENT.match(/Chrome\/(\d+)/);
@@ -28,7 +36,16 @@ var IS_NODE = Object.prototype.toString.call(process) == '[object process]';
 var WEBKIT_STRING_PAD_BUG = /Version\/10(?:\.\d+){1,2}(?: [\w./]+)?(?: Mobile\/\w+)? Safari\//.test(USERAGENT);
 
 var DESCRIPTORS_SUPPORT = function () {
-  return Object.defineProperty({}, 'a', { get: function () { return 7; } }).a == 7;
+  return Object.defineProperty({}, 'a', {
+    get: function () { return 7; }
+  }).a == 7;
+};
+
+var V8_PROTOTYPE_DEFINE_BUG = function () {
+  return Object.defineProperty(function () { /* empty */ }, 'prototype', {
+    value: 42,
+    writable: false
+  }).prototype == 42;
 };
 
 var PROMISES_SUPPORT = function () {
@@ -48,6 +65,7 @@ var SYMBOLS_SUPPORT = function () {
 };
 
 var URL_AND_URL_SEARCH_PARAMS_SUPPORT = function () {
+  // eslint-disable-next-line unicorn/relative-url-style -- required for testing
   var url = new URL('b?a=1&b=2&c=3', 'http://a');
   var searchParams = url.searchParams;
   var result = '';
@@ -233,8 +251,16 @@ GLOBAL.tests = {
   'es.symbol.unscopables': [SYMBOLS_SUPPORT, function () {
     return Symbol.unscopables;
   }],
+  'es.error.cause': function () {
+    return Error('e', { cause: 7 }).cause === 7
+      && !('cause' in Error.prototype);
+  },
   'es.aggregate-error': function () {
-    return typeof AggregateError === 'function';
+    return typeof AggregateError == 'function';
+  },
+  'es.aggregate-error.cause': function () {
+    return AggregateError([1], 'e', { cause: 7 }).cause === 7
+      && !('cause' in AggregateError.prototype);
   },
   'es.array.at': function () {
     return [].at;
@@ -485,11 +511,26 @@ GLOBAL.tests = {
   'es.date.to-string': function () {
     return new Date(NaN).toString() == 'Invalid Date';
   },
+  'es.error.to-string': function () {
+    if (DESCRIPTORS_SUPPORT) {
+      // Chrome 32- incorrectly call accessor
+      var object = Object.create(Object.defineProperty({}, 'name', { get: function () {
+        return this === object;
+      } }));
+      if (Error.prototype.toString.call(object) !== 'true') return false;
+    }
+    // FF10- does not properly handle non-strings
+    return Error.prototype.toString.call({ message: 1, name: 2 }) === '2: 1'
+      // IE8 does not properly handle defaults
+      && Error.prototype.toString.call({}) === 'Error';
+  },
   'es.escape': function () {
     return escape;
   },
   'es.function.bind': function () {
-    return Function.prototype.bind;
+    var test = (function () { /* empty */ }).bind();
+    // eslint-disable-next-line no-prototype-builtins -- safe
+    return typeof test == 'function' && !test.hasOwnProperty('prototype');
   },
   'es.function.has-instance': [SYMBOLS_SUPPORT, function () {
     return Symbol.hasInstance in Function.prototype;
@@ -627,6 +668,21 @@ GLOBAL.tests = {
         && parseInt(WHITESPACES + '0x16') === 22;
     }
   },
+  'es.number.to-exponential': function () {
+    try {
+      1.0.toExponential(Infinity);
+    } catch (error) {
+      try {
+        1.0.toExponential(-Infinity);
+      } catch (error2) {
+        Infinity.toExponential(Infinity);
+        NaN.toExponential(Infinity);
+        return (-6.9e-11).toExponential(4) === '-6.9000e-11'
+          && 1.255.toExponential(2) === '1.25e+0';
+        // && 25.0.toExponential(0) === '3e+1';
+      }
+    }
+  },
   'es.number.to-fixed': function () {
     try {
       Number.prototype.toFixed.call({});
@@ -666,10 +722,10 @@ GLOBAL.tests = {
     return Object.create;
   },
   'es.object.define-getter': OBJECT_PROTOTYPE_ACCESSORS_SUPPORT,
-  'es.object.define-properties': [DESCRIPTORS_SUPPORT, function () {
+  'es.object.define-properties': [DESCRIPTORS_SUPPORT, V8_PROTOTYPE_DEFINE_BUG, function () {
     return Object.defineProperties;
   }],
-  'es.object.define-property': DESCRIPTORS_SUPPORT,
+  'es.object.define-property': [DESCRIPTORS_SUPPORT, V8_PROTOTYPE_DEFINE_BUG],
   'es.object.define-setter': OBJECT_PROTOTYPE_ACCESSORS_SUPPORT,
   'es.object.entries': function () {
     return Object.entries;
@@ -752,6 +808,7 @@ GLOBAL.tests = {
     return Promise.any;
   },
   'es.promise.finally': [PROMISES_SUPPORT, function () {
+    // eslint-disable-next-line unicorn/no-thenable -- required for testing
     return Promise.prototype['finally'].call({ then: function () { return this; } }, function () { /* empty */ });
   }],
   'es.reflect.apply': function () {
@@ -880,8 +937,8 @@ GLOBAL.tests = {
       && set.has(0)
       && set[Symbol.toStringTag];
   }],
-  'es.string.at': function () {
-    return 'a'.at(-1) === 'a';
+  'es.string.at-alternative': function () {
+    return '𠮷'.at(-2) === '\uD842';
   },
   'es.string.code-point-at': function () {
     return String.prototype.codePointAt;
@@ -1081,10 +1138,14 @@ GLOBAL.tests = {
     return Int8Array.prototype.indexOf;
   }],
   'es.typed-array.iterator': [ARRAY_BUFFER_VIEWS_SUPPORT, function () {
-    return Int8Array.prototype[Symbol.iterator].name === 'values'
-      && Int8Array.prototype[Symbol.iterator] === Int8Array.prototype.values
-      && Int8Array.prototype.keys
-      && Int8Array.prototype.entries;
+    try {
+      Int8Array.prototype[Symbol.iterator].call([1]);
+    } catch (error) {
+      return Int8Array.prototype[Symbol.iterator].name === 'values'
+        && Int8Array.prototype[Symbol.iterator] === Int8Array.prototype.values
+        && Int8Array.prototype.keys
+        && Int8Array.prototype.entries;
+    }
   }],
   'es.typed-array.join': [ARRAY_BUFFER_VIEWS_SUPPORT, function () {
     return Int8Array.prototype.join;
@@ -1112,8 +1173,11 @@ GLOBAL.tests = {
     return Int8Array.prototype.reverse;
   }],
   'es.typed-array.set': [ARRAY_BUFFER_VIEWS_SUPPORT, function () {
-    new Int8Array(1).set({});
-    return true;
+    var array = new Uint8ClampedArray(3);
+    array.set(1);
+    array.set('2', 1);
+    Int8Array.prototype.set.call(array, { length: 1, 0: 3 }, 2);
+    return array[0] === 0 && array[1] === 2 && array[2] === 3;
   }],
   'es.typed-array.slice': [ARRAY_BUFFER_VIEWS_SUPPORT, function () {
     return new Int8Array(1).slice();
@@ -1210,11 +1274,39 @@ GLOBAL.tests = {
   'esnext.array.find-last-index': function () {
     return [].findLastIndex;
   },
+  'esnext.array.group-by': function () {
+    try {
+      // https://bugs.webkit.org/show_bug.cgi?id=236541
+      Array.prototype.groupBy.call(null, function () { /* empty */ });
+      return false;
+    } catch (error) { /* empty */ }
+    return Array.prototype.groupBy;
+  },
+  'esnext.array.group-by-to-map': function () {
+    try {
+      // https://bugs.webkit.org/show_bug.cgi?id=236541
+      Array.prototype.groupByToMap.call(null, function () { /* empty */ });
+      return false;
+    } catch (error) { /* empty */ }
+    return Array.prototype.groupByToMap;
+  },
   'esnext.array.is-template-object': function () {
     return Array.isTemplateObject;
   },
+  'esnext.array.to-reversed': function () {
+    return [].toReversed;
+  },
+  'esnext.array.to-sorted': function () {
+    return [].toSorted;
+  },
+  'esnext.array.to-spliced': function () {
+    return [].toSpliced;
+  },
   'esnext.array.unique-by': function () {
     return [].uniqueBy;
+  },
+  'esnext.array.with': function () {
+    return []['with'];
   },
   'esnext.async-iterator.constructor': function () {
     return typeof AsyncIterator == 'function';
@@ -1267,6 +1359,15 @@ GLOBAL.tests = {
   'esnext.composite-symbol': function () {
     return compositeSymbol;
   },
+  'esnext.function.is-callable': function () {
+    return Function.isCallable;
+  },
+  'esnext.function.is-constructor': function () {
+    return Function.isConstructor;
+  },
+  'esnext.function.un-this': function () {
+    return Function.prototype.unThis;
+  },
   'esnext.iterator.constructor': function () {
     try {
       Iterator({});
@@ -1313,6 +1414,9 @@ GLOBAL.tests = {
   },
   'esnext.iterator.to-array': function () {
     return Iterator.prototype.toArray;
+  },
+  'esnext.iterator.to-async': function () {
+    return Iterator.prototype.toAsync;
   },
   'esnext.map.delete-all': function () {
     return Map.prototype.deleteAll;
@@ -1458,6 +1562,9 @@ GLOBAL.tests = {
   'esnext.string.code-points': function () {
     return String.prototype.codePoints;
   },
+  'esnext.string.cooked': function () {
+    return String.cooked;
+  },
   'esnext.symbol.async-dispose': function () {
     return Symbol.dispose;
   },
@@ -1473,9 +1580,6 @@ GLOBAL.tests = {
   'esnext.symbol.observable': function () {
     return Symbol.observable;
   },
-  'esnext.typed-array.from-async': function () {
-    return Int8Array.fromAsync;
-  },
   'esnext.typed-array.filter-reject': function () {
     return Int8Array.prototype.filterReject;
   },
@@ -1484,6 +1588,21 @@ GLOBAL.tests = {
   },
   'esnext.typed-array.find-last-index': function () {
     return Int8Array.prototype.findLastIndex;
+  },
+  'esnext.typed-array.to-reversed': function () {
+    return Int8Array.prototype.toReversed;
+  },
+  'esnext.typed-array.to-sorted': function () {
+    return Int8Array.prototype.toSorted;
+  },
+  'esnext.typed-array.to-spliced': function () {
+    return Int8Array.prototype.toSpliced;
+  },
+  'esnext.typed-array.unique-by': function () {
+    return Int8Array.prototype.uniqueBy;
+  },
+  'esnext.typed-array.with': function () {
+    return Int8Array.prototype['with'];
   },
   'esnext.weak-map.delete-all': function () {
     return WeakMap.prototype.deleteAll;
@@ -1508,6 +1627,20 @@ GLOBAL.tests = {
   },
   'esnext.weak-set.of': function () {
     return WeakSet.of;
+  },
+  'web.atob': function () {
+    try {
+      atob();
+    } catch (error) {
+      return atob(' ') === '';
+    }
+  },
+  'web.btoa': function () {
+    try {
+      btoa();
+    } catch (error) {
+      return typeof btoa == 'function';
+    }
   },
   'web.dom-collections.for-each': function () {
     return (!GLOBAL.NodeList || (NodeList.prototype.forEach && NodeList.prototype.forEach === [].forEach))
@@ -1562,11 +1695,29 @@ GLOBAL.tests = {
     }
     return true;
   },
+  'web.dom-exception.constructor': function () {
+    return new DOMException() instanceof Error
+      && new DOMException(1, 'DataCloneError').code === 25
+      && String(new DOMException(1, 2)) === '2: 1'
+      && DOMException.DATA_CLONE_ERR === 25
+      && DOMException.prototype.DATA_CLONE_ERR === 25;
+  },
+  'web.dom-exception.stack': function () {
+    return !('stack' in Error('1')) || 'stack' in new DOMException();
+  },
+  'web.dom-exception.to-string-tag': function () {
+    return typeof DOMException == 'function'
+      && DOMException.prototype[Symbol.toStringTag] === 'DOMException';
+  },
   'web.immediate': function () {
     return setImmediate && clearImmediate;
   },
   'web.queue-microtask': function () {
     return Object.getOwnPropertyDescriptor(GLOBAL, 'queueMicrotask').value;
+  },
+  'web.structured-clone': function () {
+    var test = structuredClone(new AggregateError([1], 'a', { cause: 3 }));
+    return test.name == 'AggregateError' && test.errors[0] == 1 && test.message == 'a' && test.cause == 3;
   },
   'web.timers': function () {
     return !/MSIE .\./.test(USERAGENT);

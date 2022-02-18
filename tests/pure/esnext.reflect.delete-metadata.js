@@ -1,19 +1,21 @@
-import { defineMetadata, hasOwnMetadata, deleteMetadata } from 'core-js-pure/features/reflect';
 import create from 'core-js-pure/features/object/create';
+import defineMetadata from 'core-js-pure/features/reflect/define-metadata';
+import hasOwnMetadata from 'core-js-pure/features/reflect/has-own-metadata';
+import deleteMetadata from 'core-js-pure/features/reflect/delete-metadata';
 
 QUnit.test('Reflect.deleteMetadata', assert => {
   assert.isFunction(deleteMetadata);
   assert.arity(deleteMetadata, 2);
   assert.throws(() => deleteMetadata('key', undefined, undefined), TypeError);
-  assert.same(deleteMetadata('key', {}, undefined), false);
+  assert.false(deleteMetadata('key', {}, undefined));
   let object = {};
   defineMetadata('key', 'value', object, undefined);
-  assert.same(deleteMetadata('key', object, undefined), true);
+  assert.true(deleteMetadata('key', object, undefined));
   const prototype = {};
   defineMetadata('key', 'value', prototype, undefined);
-  assert.same(deleteMetadata('key', create(prototype), undefined), false);
+  assert.false(deleteMetadata('key', create(prototype), undefined));
   object = {};
   defineMetadata('key', 'value', object, undefined);
   deleteMetadata('key', object, undefined);
-  assert.same(hasOwnMetadata('key', object, undefined), false);
+  assert.false(hasOwnMetadata('key', object, undefined));
 });

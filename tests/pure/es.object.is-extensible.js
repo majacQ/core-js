@@ -1,4 +1,4 @@
-import isExtensible from 'core-js-pure/features/object/is-extensible';
+import isExtensible from 'core-js-pure/es/object/is-extensible';
 
 QUnit.test('Object.isExtensible', assert => {
   assert.isFunction(isExtensible);
@@ -6,7 +6,7 @@ QUnit.test('Object.isExtensible', assert => {
   const primitives = [42, 'string', false, null, undefined];
   for (const value of primitives) {
     assert.notThrows(() => isExtensible(value) || true, `accept ${ value }`);
-    assert.same(isExtensible(value), false, `returns false on ${ value }`);
+    assert.false(isExtensible(value), `returns false on ${ value }`);
   }
-  assert.same(isExtensible({}), true);
+  assert.true(isExtensible({}));
 });

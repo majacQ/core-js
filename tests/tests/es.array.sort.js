@@ -81,9 +81,9 @@ QUnit.test('Array#sort', assert => {
 
   array.sort((a, b) => (a / 4 | 0) - (b / 4 | 0));
 
-  assert.ok(1 / [0, -0].sort()[0] > 0, '-0');
+  assert.true(1 / [0, -0].sort()[0] > 0, '-0');
 
-  assert.same(String(array), String(expected), 'stable #1');
+  assert.arrayEqual(array, expected, 'stable #1');
 
   let result = '';
   array = [];
@@ -116,7 +116,7 @@ QUnit.test('Array#sort', assert => {
   assert.throws(() => [1, 2, 3].sort(null), 'throws on null');
   assert.throws(() => [1, 2, 3].sort({}), 'throws on {}');
 
-  if (typeof Symbol === 'function' && !Symbol.sham) {
+  if (typeof Symbol == 'function' && !Symbol.sham) {
     assert.throws(() => [Symbol(1), Symbol(2)].sort(), 'w/o cmp throws on symbols');
   }
 

@@ -1,10 +1,10 @@
-import Promise from 'core-js-pure/features/promise';
+import Promise from 'core-js-pure/es/promise';
 
 QUnit.test('Promise#finally', assert => {
   assert.isFunction(Promise.prototype.finally);
   assert.arity(Promise.prototype.finally, 1);
   assert.nonEnumerable(Promise.prototype, 'finally');
-  assert.ok(Promise.resolve(42).finally(() => { /* empty */ }) instanceof Promise, 'returns a promise');
+  assert.true(Promise.resolve(42).finally(() => { /* empty */ }) instanceof Promise, 'returns a promise');
 });
 
 QUnit.test('Promise#finally, resolved', assert => {

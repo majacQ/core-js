@@ -1,11 +1,12 @@
-import uniqueBy from 'core-js-pure/features/array/unique-by';
 import { STRICT } from '../helpers/constants';
+
+import uniqueBy from 'core-js-pure/features/array/unique-by';
 
 QUnit.test('Array#uniqueBy', assert => {
   assert.isFunction(uniqueBy);
 
   let array = [1, 2, 3, 2, 1];
-  assert.ok(uniqueBy(array) !== array);
+  assert.notSame(uniqueBy(array), array);
   assert.deepEqual(uniqueBy(array), [1, 2, 3]);
 
   array = [

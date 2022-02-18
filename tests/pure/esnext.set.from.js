@@ -1,13 +1,13 @@
 import { createIterable } from '../helpers/helpers';
 
+import toArray from 'core-js-pure/es/array/from';
 import Set from 'core-js-pure/features/set';
-import toArray from 'core-js-pure/features/array/from';
 
 QUnit.test('Set.from', assert => {
   const { from } = Set;
   assert.isFunction(from);
   assert.arity(from, 1);
-  assert.ok(Set.from() instanceof Set);
+  assert.true(Set.from() instanceof Set);
   assert.deepEqual(toArray(Set.from([])), []);
   assert.deepEqual(toArray(Set.from([1])), [1]);
   assert.deepEqual(toArray(Set.from([1, 2, 3, 2, 1])), [1, 2, 3]);

@@ -1,14 +1,14 @@
 import { createIterable } from '../helpers/helpers';
 
-import fromEntries from 'core-js-pure/features/object/from-entries';
-import Set from 'core-js-pure/features/set';
+import Set from 'core-js-pure/es/set';
+import fromEntries from 'core-js-pure/es/object/from-entries';
 
 QUnit.test('Object.fromEntries', assert => {
   assert.isFunction(fromEntries);
   assert.arity(fromEntries, 1);
   assert.name(fromEntries, 'fromEntries');
 
-  assert.ok(fromEntries([]) instanceof Object);
+  assert.true(fromEntries([]) instanceof Object);
   assert.same(fromEntries([['foo', 1]]).foo, 1);
   assert.same(fromEntries(createIterable([['bar', 2]])).bar, 2);
 

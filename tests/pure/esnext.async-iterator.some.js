@@ -1,7 +1,7 @@
-import AsyncIterator from 'core-js-pure/features/async-iterator';
-
 import { createIterator } from '../helpers/helpers';
 import { STRICT_THIS } from '../helpers/constants';
+
+import AsyncIterator from 'core-js-pure/features/async-iterator';
 
 QUnit.test('AsyncIterator#some', assert => {
   assert.expect(16);
@@ -13,10 +13,10 @@ QUnit.test('AsyncIterator#some', assert => {
   assert.nonEnumerable(AsyncIterator.prototype, 'some');
 
   some.call(createIterator([1, 2, 3]), it => it === 2).then(result => {
-    assert.ok(result, 'basic functionality, +');
+    assert.true(result, 'basic functionality, +');
     return some.call(createIterator([1, 2, 3]), it => it === 4);
   }).then(result => {
-    assert.ok(!result, 'basic functionality, -');
+    assert.false(result, 'basic functionality, -');
     return some.call(createIterator([1]), function (arg) {
       assert.same(this, STRICT_THIS, 'this');
       assert.same(arguments.length, 1, 'arguments length');

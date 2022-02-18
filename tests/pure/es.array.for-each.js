@@ -1,6 +1,6 @@
 import { STRICT } from '../helpers/constants';
 
-import forEach from 'core-js-pure/features/array/for-each';
+import forEach from 'core-js-pure/es/array/for-each';
 
 QUnit.test('Array#forEach', assert => {
   assert.isFunction(forEach);
@@ -17,29 +17,29 @@ QUnit.test('Array#forEach', assert => {
   forEach([1, 2, 3], it => {
     result += it;
   });
-  assert.ok(result === '123');
+  assert.same(result, '123');
   result = '';
   forEach([1, 2, 3], (value, key) => {
     result += key;
   });
-  assert.ok(result === '012');
+  assert.same(result, '012');
   result = '';
   forEach([1, 2, 3], (value, key, that) => {
     result += that;
   });
-  assert.ok(result === '1,2,31,2,31,2,3');
+  assert.same(result, '1,2,31,2,31,2,3');
   result = '';
   forEach([1, 2, 3], function () {
     result += this;
   }, 1);
-  assert.ok(result === '111');
+  assert.same(result, '111');
   result = '';
   array = [];
   array[5] = '';
   forEach(array, (value, key) => {
     result += key;
   });
-  assert.ok(result === '5');
+  assert.same(result, '5');
   if (STRICT) {
     assert.throws(() => forEach(null, () => { /* empty */ }), TypeError);
     assert.throws(() => forEach(undefined, () => { /* empty */ }), TypeError);

@@ -1,4 +1,4 @@
-import atanh from 'core-js-pure/features/math/atanh';
+import atanh from 'core-js-pure/es/math/atanh';
 
 QUnit.test('Math.atanh', assert => {
   assert.isFunction(atanh);
@@ -7,8 +7,8 @@ QUnit.test('Math.atanh', assert => {
   assert.same(atanh(-1.5), NaN);
   assert.same(atanh(2), NaN);
   assert.same(atanh(1.5), NaN);
-  assert.strictEqual(atanh(-1), -Infinity);
-  assert.strictEqual(atanh(1), Infinity);
+  assert.same(atanh(-1), -Infinity);
+  assert.same(atanh(1), Infinity);
   assert.same(atanh(0), 0);
   assert.same(atanh(-0), -0);
   assert.same(atanh(-1e300), NaN);

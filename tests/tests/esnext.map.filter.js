@@ -18,7 +18,7 @@ QUnit.test('Map#filter', assert => {
     assert.same(this, context, 'correct callback context');
   }, context);
 
-  assert.ok(new Map().filter(it => it) instanceof Map);
+  assert.true(new Map().filter(it => it) instanceof Map);
 
   assert.deepEqual(from(new Map([
     ['a', 1],
@@ -29,7 +29,7 @@ QUnit.test('Map#filter', assert => {
     [3, 4],
     ['d', true],
     [4, 5],
-  ]).filter(it => typeof it === 'number')), [
+  ]).filter(it => typeof it == 'number')), [
     ['a', 1],
     [1, 2],
     ['b', 3],

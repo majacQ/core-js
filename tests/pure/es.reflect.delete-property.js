@@ -1,7 +1,8 @@
 import { DESCRIPTORS } from '../helpers/constants';
 
-import deleteProperty from 'core-js-pure/features/reflect/delete-property';
-import { defineProperty, keys } from 'core-js-pure/features/object';
+import keys from 'core-js-pure/es/object/keys';
+import defineProperty from 'core-js-pure/es/object/define-property';
+import deleteProperty from 'core-js-pure/es/reflect/delete-property';
 
 QUnit.test('Reflect.deleteProperty', assert => {
   assert.isFunction(deleteProperty);
@@ -10,12 +11,12 @@ QUnit.test('Reflect.deleteProperty', assert => {
     assert.name(deleteProperty, 'deleteProperty');
   }
   const object = { bar: 456 };
-  assert.strictEqual(deleteProperty(object, 'bar'), true);
-  assert.ok(keys(object).length === 0);
+  assert.true(deleteProperty(object, 'bar'));
+  assert.same(keys(object).length, 0);
   if (DESCRIPTORS) {
-    assert.strictEqual(deleteProperty(defineProperty({}, 'foo', {
+    assert.false(deleteProperty(defineProperty({}, 'foo', {
       value: 42,
-    }), 'foo'), false);
+    }), 'foo'));
   }
   assert.throws(() => deleteProperty(42, 'foo'), TypeError, 'throws on primitive');
 });
