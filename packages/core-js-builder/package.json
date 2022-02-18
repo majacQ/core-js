@@ -9,10 +9,20 @@
   },
   "main": "index.js",
   "dependencies": {
-    "core-js": "3.19.3",
+  <<<<<<< snyk-upgrade-c2a9891f28b730373019c17e1dcec6f8
+    "core-js": "3.20.1",
     "core-js-compat": "3.19.3",
+  <<<<<<< snyk-upgrade-113ff1fd468b53aaaafcc7fd40e665b1
     "mkdirp": ">=1.0.4",
     "webpack": ">=4.46.0 <5"
+  =======
+  =======
+    "core-js": "3.19.3",
+    "core-js-compat": "3.20.1",
+  >>>>>>> main
+    "mkdirp": ">=0.5.5 <1",
+    "webpack": ">=5.65.0"
+  >>>>>>> main
   },
   "engines": {
     "node": ">=8.9.0"
